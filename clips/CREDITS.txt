@@ -1,0 +1,1 @@
+Open-source Yoruba speech corpus (OpenSLR SLR86). Copyright Google, Inc. Licensed CC BY-SA 4.0: https://creativecommons.org/licenses/by-sa/4.0/ . Gutkin, Demirsahin, Kjartansson, Rivera and Tubosun, 'Developing an Open-Source Corpus of Yoruba Speech', Interspeech 2020, pp. 404-408. Clips were selected from the corpus and, if --mp3 was used, converted to MP3.

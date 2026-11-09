@@ -1,0 +1,2167 @@
+<title>Èdè Mi</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Noto+Sans:wght@400;600&family=Noto+Serif:wght@600;700&display=swap">
+<style>
+:root{
+  --bg:#F2F4FB; --surface:#FFFFFF; --fg:#131A3F; --muted:#515A86; --line:#D6DBF0;
+  --indigo:#2A3A9C; --on-indigo:#FFFFFF; --tint:#E3E7F9;
+  --hero:#2A3A9C; --on-hero:#FFFFFF; --pat:rgba(255,255,255,.11);
+  --gold:#E0A100; --good:#17744A; --good-bg:#DDF3E8; --bad:#B3261E; --bad-bg:#FBE3E0;
+  --f-ui:'Bricolage Grotesque','Noto Sans',system-ui,sans-serif;
+  --f-body:'Noto Sans',system-ui,sans-serif;
+  --f-yo:'Noto Serif','Noto Sans',Georgia,serif;
+  --end:#C3322B;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0C1030; --surface:#161C45; --fg:#E9ECFC; --muted:#A5ACD8; --line:#2A3263;
+  --indigo:#8D9AFF; --on-indigo:#0C1030; --tint:#222A5C;
+  --hero:#18205E; --on-hero:#FFFFFF; --pat:rgba(255,255,255,.08);
+  --gold:#F2BC2E; --good:#5ED79B; --good-bg:#12372A; --bad:#FF8F85; --bad-bg:#43191A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0C1030; --surface:#161C45; --fg:#E9ECFC; --muted:#A5ACD8; --line:#2A3263;
+  --indigo:#8D9AFF; --on-indigo:#0C1030; --tint:#222A5C;
+  --hero:#18205E; --on-hero:#FFFFFF; --pat:rgba(255,255,255,.08);
+  --gold:#F2BC2E; --good:#5ED79B; --good-bg:#12372A; --bad:#FF8F85; --bad-bg:#43191A; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font:16px/1.5 var(--f-body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 110px}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:880px;margin:0 auto}
+.yo{font-family:var(--f-yo);font-weight:700}
+h1,h2,h3{font-family:var(--f-ui);text-wrap:balance;margin:0}
+.muted{color:var(--muted)}
+.eyebrow{font:600 12px/1 var(--f-ui);letter-spacing:.14em;text-transform:uppercase}
+
+/* hero */
+.hero{margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:28px max(16px,env(safe-area-inset-left,0px)) 24px;background-color:var(--hero);color:var(--on-hero);
+  background-image:radial-gradient(circle,transparent 5px,var(--pat) 5px 7px,transparent 7px),radial-gradient(circle,var(--pat) 0 2px,transparent 2px);
+  background-size:34px 34px;background-position:0 0,17px 17px;padding-top:max(28px,env(safe-area-inset-top,0px))}
+.hero .wrap{display:flex;flex-direction:column;gap:14px}
+.hero h1{font-size:clamp(2.2rem,8vw,3.4rem);font-weight:800;line-height:1.02}
+.hero h1 span{font-family:var(--f-yo)}
+.hero p{margin:0;max-width:46ch;opacity:.92}
+.stats{display:flex;flex-wrap:wrap;gap:8px 22px;font:600 15px var(--f-ui)}
+.stats b{font-size:22px;margin-right:4px}
+
+/* unit list */
+.sec{margin:26px 0 12px;display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.sec h2{font-size:1.35rem}
+.units{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.unit{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:44px 1fr;gap:4px 14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:14px;min-width:0}
+.unit:hover{border-color:var(--indigo)}
+.unit:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.unit .n{grid-row:span 3;width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--tint);color:var(--indigo);font:800 18px var(--f-ui)}
+.unit.done .n{background:var(--indigo);color:var(--on-indigo)}
+.unit h3{font-size:1.05rem}
+.unit .yoname{font-family:var(--f-yo);font-weight:600;color:var(--muted);font-size:.9rem}
+.bar{height:6px;border-radius:3px;background:var(--tint);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--gold);border-radius:3px}
+.meta{font-size:.82rem;color:var(--muted)}
+
+/* panels */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;margin-top:18px}
+.top{display:flex;align-items:center;gap:12px;padding-top:max(18px,env(safe-area-inset-top,0px))}
+.top .bar{flex:1;height:10px}
+.x{all:unset;cursor:pointer;width:40px;height:40px;display:grid;place-items:center;border-radius:50%;font:600 22px var(--f-ui);color:var(--muted)}
+.x:hover{background:var(--tint)}
+.x:focus-visible{outline:3px solid var(--gold)}
+.big{font-size:clamp(2rem,9vw,3.2rem);line-height:1.15;text-align:center;overflow-wrap:anywhere}
+.cen{text-align:center}
+.card{padding:34px 20px;display:flex;flex-direction:column;gap:12px;align-items:center;min-height:240px;justify-content:center}
+.card .en{font:600 1.25rem var(--f-ui)}
+.note{background:var(--tint);border-radius:10px;padding:10px 14px;font-size:.92rem;max-width:52ch;text-align:left}
+.row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.btn{border:0;border-radius:12px;padding:13px 22px;font:700 16px var(--f-ui);background:var(--indigo);color:var(--on-indigo);min-width:120px}
+.btn.alt{background:var(--tint);color:var(--fg)}
+.btn:disabled{opacity:.45;cursor:default}
+.opts{display:grid;gap:10px;margin-top:18px}
+.opt{text-align:left;border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:14px 16px;font:600 17px var(--f-body);min-width:0;overflow-wrap:anywhere}
+.opt.yo{font-family:var(--f-yo);font-weight:700;font-size:19px}
+.opt:hover:not(:disabled){border-color:var(--indigo)}
+.opt.right{border-color:var(--good);background:var(--good-bg)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-bg)}
+.fb{margin-top:16px;padding:14px 16px;border-radius:12px;font-size:.95rem}
+.fb.ok{background:var(--good-bg);color:var(--good)}
+.fb.no{background:var(--bad-bg);color:var(--bad)}
+.fb b{display:block;font:800 17px var(--f-ui)}
+.fb span{color:var(--fg)}
+.q-label{font:600 13px var(--f-ui);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:22px 0 6px}
+.prompt{font:700 1.5rem/1.25 var(--f-ui);overflow-wrap:anywhere}
+.prompt.yo{font-family:var(--f-yo);font-size:1.9rem}
+
+/* sentence builder */
+.slots{min-height:64px;border-bottom:2px solid var(--line);display:flex;gap:8px;flex-wrap:wrap;padding:8px 0;margin-top:14px}
+.bank{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.tok{border:2px solid var(--line);background:var(--surface);border-radius:10px;padding:9px 14px;font:700 18px var(--f-yo)}
+.tok.used{visibility:hidden}
+.slots .tok{border-color:var(--indigo)}
+
+/* tones */
+.tone3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.tbtn{border:2px solid var(--line);background:var(--surface);border-radius:14px;padding:14px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.tbtn:hover{border-color:var(--indigo)}
+.tbtn .m{font:700 2.4rem/1 var(--f-yo)}
+.tbtn .nm{font:700 14px var(--f-ui)}
+.tbtn .s{font-size:.8rem;color:var(--muted)}
+.pairs{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:12px}
+.pair{border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px;align-items:center;background:var(--surface);text-align:center}
+.pair .w{font:700 2rem var(--f-yo)}
+.pair svg{width:100%;max-width:150px;height:auto}
+.grp{margin-top:6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 14px;font:600 14px var(--f-ui)}
+
+/* alphabet */
+.letters{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px}
+.let{border:2px solid var(--line);background:var(--surface);border-radius:12px;aspect-ratio:1;display:grid;place-items:center;font:700 1.7rem var(--f-yo);min-width:0}
+.let.sp{border-color:var(--gold)}
+.let[aria-pressed="true"]{background:var(--indigo);color:var(--on-indigo);border-color:var(--indigo)}
+.detail{display:flex;flex-direction:column;gap:6px;align-items:flex-start}
+.detail .L{font:700 3rem/1 var(--f-yo)}
+
+/* nav */
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px));z-index:5}
+nav .in{max-width:880px;margin:0 auto;display:grid;grid-template-columns:repeat(6,1fr);gap:2px}
+nav button{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 4px;border-radius:10px;font:600 12px var(--f-ui);color:var(--muted)}
+nav button svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+nav button[aria-current="page"]{color:var(--indigo);background:var(--tint)}
+nav button:focus-visible{outline:3px solid var(--gold)}
+.fine{font-size:.85rem;color:var(--muted);margin-top:22px}
+.src a{color:var(--indigo)}
+/* extra pages */
+.back{all:unset;cursor:pointer;display:block;color:var(--indigo);font:600 14px var(--f-ui);padding-top:max(16px,env(safe-area-inset-top,0px))}
+.back:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.search{width:100%;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;padding:12px 14px;font:16px var(--f-body)}
+.search:focus-visible{outline:3px solid var(--gold);border-color:var(--indigo)}
+button.chip.on{background:var(--indigo);color:var(--on-indigo);border-color:var(--indigo)}
+.wrow{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}
+.wrow:last-child{border-bottom:0}
+.wy{font-size:1.25rem;overflow-wrap:anywhere}
+.cult h3{font-size:1.1rem;margin-bottom:6px}
+.cult p{margin:6px 0 0}
+.prov{font:700 1.25rem/1.4 var(--f-yo);margin:10px 0 2px;overflow-wrap:anywhere}
+.cult a,.fine a{color:var(--indigo)}
+/* audio + toast */
+.spk{all:unset;cursor:pointer;flex:none;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--tint);color:var(--indigo)}
+.spk svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.spk:focus-visible{outline:3px solid var(--gold)}
+#toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(78px + env(safe-area-inset-bottom,0px));max-width:min(92vw,420px);background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:12px;font-size:.9rem;z-index:20;text-align:center}
+/* phone call */
+.callscr{display:flex;flex-direction:column;align-items:center;gap:10px;padding:56px 0 24px;text-align:center}
+.av{width:104px;height:104px;border-radius:50%;display:grid;place-items:center;font:700 2.6rem var(--f-yo);background-color:var(--hero);color:var(--on-hero);background-image:radial-gradient(circle,transparent 5px,var(--pat) 5px 7px,transparent 7px);background-size:22px 22px}
+.av.sm{width:46px;height:46px;font-size:1.3rem;background-size:14px 14px;flex:none}
+.end{border:0;border-radius:999px;padding:12px 22px;background:var(--end);color:#fff;font:700 15px var(--f-ui)}
+.callhead{display:flex;align-items:center;gap:12px;padding-top:max(14px,env(safe-area-inset-top,0px))}
+.callhead .who{flex:1;min-width:0}
+.callhead h2{font-size:1.1rem}
+.thread{display:flex;flex-direction:column;gap:12px;margin-top:16px}
+.msg{display:flex;gap:8px;align-items:flex-start;max-width:100%}
+.msg.them{align-self:flex-start;max-width:94%}
+.msg.me{align-self:flex-end;max-width:88%}
+.bub{border-radius:16px;padding:10px 14px;min-width:0;overflow-wrap:anywhere}
+.them .bub{background:var(--surface);border:1px solid var(--line)}
+.me .bub{background:var(--indigo);color:var(--on-indigo)}
+.cyo{font-size:1.2rem}
+.cen2{color:var(--muted);font-size:.9rem;margin-top:2px}
+.fbw{align-self:flex-end;max-width:88%;margin-top:-4px}
+.fbw .fb{margin-top:0}
+.fb.tip{background:var(--tint);color:var(--fg)}
+.fb .said{text-decoration:line-through;opacity:.7}
+.fb .yo{font-size:1.05rem}
+.dock{position:sticky;bottom:calc(66px + env(safe-area-inset-bottom,0px));background:var(--bg);padding:10px 0 8px;margin-top:14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line)}
+.keys{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px}
+.key{flex:none;min-width:38px;height:38px;border:1px solid var(--line);background:var(--surface);border-radius:8px;font:700 17px var(--f-yo)}
+.say{display:flex;gap:8px}
+.say input{flex:1;min-width:0;border:2px solid var(--line);background:var(--surface);color:var(--fg);border-radius:12px;padding:12px 14px;font:16px var(--f-body)}
+.say input:focus-visible{outline:3px solid var(--gold);border-color:var(--indigo)}
+.say .btn{min-width:84px;padding:12px 16px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.chip{cursor:pointer;color:var(--fg)}
+.stars{display:flex;gap:4px;justify-content:center;margin:10px 0}
+.stars svg{width:32px;height:32px}
+ul.l{margin:6px 0 0;padding-left:20px}
+ul.l li{margin:5px 0}
+.rsec{text-align:left;margin-top:18px}
+@media (prefers-reduced-motion:no-preference){.bar i{transition:width .3s}.av.ring{animation:pulse 1.4s ease-out infinite}@keyframes pulse{0%{box-shadow:0 0 0 0 var(--tint)}100%{box-shadow:0 0 0 30px transparent}}}
+
+/* ===== features.css  v4 additions: courses, games, leaderboard, profile, audio lab, writing lab ===== */
+.tabs{margin:14px 0 4px}
+.tiersec{margin-top:6px}
+.unit.course{grid-template-columns:44px 1fr}
+.unit.course .cmeta{display:flex;align-items:center;gap:10px}
+.unit.course .cmeta .bar{flex:1}
+.unit.linkcard .n{background:var(--gold);color:#1b1b1b}
+.herogoal{max-width:360px}
+.goal{display:flex;flex-direction:column;gap:6px}
+.hero .goal .bar{background:rgba(255,255,255,.25)}
+.hero .goal .meta{color:var(--on-hero);opacity:.9}
+.wotd{display:flex;justify-content:space-between;align-items:center;gap:12px}
+details.note summary{cursor:pointer;font-weight:600}
+details.panel summary{cursor:pointer}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85em;background:var(--tint);padding:2px 6px;border-radius:6px;overflow-wrap:anywhere}
+select.search{appearance:auto}
+.filebtn{display:inline-block;cursor:pointer;text-align:center}
+.filebtn.disabled{opacity:.5;pointer-events:none}
+.filebtn:focus-within{outline:3px solid var(--gold)}
+/* game hub */
+.towerpanel,.towerplay{display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center}
+.tw{display:grid;place-items:center;background:var(--tint);border-radius:14px;padding:8px 14px}
+.games{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:14px}
+.gcard{all:unset;box-sizing:border-box;cursor:pointer;display:grid;grid-template-columns:64px 1fr;gap:14px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px;min-width:0}
+.gcard:hover{border-color:var(--indigo)}
+.gcard:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.gic{width:64px;height:64px;display:grid;place-items:center;border-radius:16px;background:var(--tint);color:var(--indigo)}
+.panel .gic{width:auto;height:auto;padding:10px}
+.gtx{display:flex;flex-direction:column;gap:2px;min-width:0}
+.gtx b{font:800 1.1rem var(--f-ui)}
+.yoname{font-family:var(--f-yo);font-weight:600;color:var(--muted);font-size:.9rem}
+.gbest{font:700 12px var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--indigo);margin-top:4px}
+.gbar{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-top:14px;font:600 14px var(--f-ui)}
+.gbar b{font-size:1.1rem}
+/* match */
+.mgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+@media(min-width:560px){.mgrid{grid-template-columns:repeat(4,1fr)}}
+.mcard{aspect-ratio:1/1;border:2px solid var(--line);border-radius:14px;background:var(--surface);display:grid;place-items:center;padding:6px;font:700 15px var(--f-body);text-align:center;overflow-wrap:anywhere;min-width:0}
+.mcard.yo{font-family:var(--f-yo);font-size:17px}
+.mcard .mback{width:100%;height:100%;border-radius:10px;background-color:var(--hero);background-image:radial-gradient(circle,transparent 4px,var(--pat) 4px 6px,transparent 6px);background-size:18px 18px;display:block}
+.mcard.up{background:var(--tint);border-color:var(--indigo);color:var(--fg)}
+.mcard.ok{background:var(--good-bg);border-color:var(--good);color:var(--fg)}
+.mcard:disabled{opacity:1}
+/* runner */
+.runwrap{max-width:420px;margin:14px auto 0}
+#rcv{display:block;width:100%;height:auto;aspect-ratio:360/540;border-radius:16px;border:1px solid var(--line);touch-action:none;background:var(--hero)}
+.pad{display:grid;grid-template-columns:1fr 2fr 2fr 1fr;gap:8px;margin-top:10px}
+.pad button{border:0;border-radius:12px;padding:14px 4px;font:700 15px var(--f-ui);background:var(--tint);color:var(--fg);touch-action:manipulation}
+.pad button:active{background:var(--indigo);color:var(--on-indigo)}
+/* scramble */
+.slots.sc{border-bottom:0;min-height:60px}
+.tok.blank{width:46px;height:46px;border-style:dashed;padding:0}
+.tok.okt{border-color:var(--good);background:var(--good-bg)}
+/* leaderboard */
+ol.lb{list-style:none;margin:0;padding:0}
+ol.lb li{display:grid;grid-template-columns:34px 1fr auto;gap:8px;align-items:center;padding:10px 4px;border-bottom:1px solid var(--line)}
+ol.lb li:last-child{border-bottom:0}
+ol.lb li.me{background:var(--tint);border-radius:10px;padding-left:10px;padding-right:10px;border-bottom-color:transparent}
+ol.lb li.gap{display:block;text-align:center;color:var(--muted);padding:2px}
+ol.lb .rk{font:800 1rem var(--f-ui);color:var(--muted)}
+ol.lb .nm{min-width:0;overflow-wrap:anywhere;font-weight:600}
+ol.lb b{font:800 1rem var(--f-ui)}
+i.sim,i.you{font:700 10px var(--f-ui);font-style:normal;letter-spacing:.08em;text-transform:uppercase;padding:2px 6px;border-radius:999px;margin-left:6px;vertical-align:middle}
+i.sim{background:var(--tint);color:var(--muted)}
+i.you{background:var(--indigo);color:var(--on-indigo)}
+/* profile */
+.statgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column}
+.stat b{font:800 1.5rem var(--f-ui)}
+.stat span{font-size:.82rem;color:var(--muted)}
+.badges{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.badge{background:var(--surface);border:1px dashed var(--line);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:2px;opacity:.65}
+.badge.on{border:2px solid var(--gold);opacity:1}
+.badge .bi{font-size:1.4rem;color:var(--gold)}
+@media(max-width:480px){.towerpanel,.towerplay{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:no-preference){.mcard{transition:background .15s,border-color .15s}}
+nav button{min-width:0}
+.tw svg{width:auto;max-width:100%;height:150px}
+.tw{min-width:120px}
+.btn.mic{font-size:1.1rem;padding:16px 28px}
+.listening{display:flex;gap:6px;justify-content:center;align-items:flex-end;height:44px;margin-top:14px}
+.listening span{width:8px;height:16px;border-radius:4px;background:var(--indigo)}
+@media(prefers-reduced-motion:no-preference){.listening span{animation:eq 0.9s ease-in-out infinite}.listening span:nth-child(2){animation-delay:.15s}.listening span:nth-child(3){animation-delay:.3s}@keyframes eq{0%,100%{height:10px}50%{height:40px}}}
+
+</style>
+
+<div id="app"><div class="wrap" id="main"></div></div>
+<nav aria-label="Main"><div class="in" id="nav"></div></nav>
+<div id="toast" role="status" hidden></div>
+
+<script>
+/* ===== 01-content.js  Base lessons (v3 units), alphabet and tone data. Edit here to change lesson words. ===== */
+const UNITS=[
+{id:'greet',n:1,title:'Greetings',yo:'Ìkíni',tip:'Greetings matter a lot in Yoruba culture. Starting with “Ẹ” shows respect, so use it with elders and with groups.',items:[
+ ['Ẹ káàárọ̀','Good morning','Said before noon. The “Ẹ” at the start is the respectful form.'],
+ ['Ẹ káàsán','Good afternoon','Used from around midday until late afternoon.'],
+ ['Ẹ kú ìrọ̀lẹ́','Good evening','Used as the day winds down.'],
+ ['Báwo ni?','How are you?','Friendly and works any time of day.'],
+ ['Mo wà dáadáa','I am fine','A common answer to “Báwo ni?”'],
+ ['Ẹ ṣé','Thank you','Say “Ẹ ṣé gan-an” for “thank you very much.”'],
+ ['Ẹ káàbọ̀','Welcome','Said to someone arriving.'],
+ ['Ó dàbọ̀','Goodbye',''],
+ ['Bẹ́ẹ̀ ni','Yes',''],
+ ['Rárá','No',''],
+ ['Jọ̀wọ́','Please',''],
+ ['Ẹ pẹ̀lẹ́','Sorry / take it easy','Said to show sympathy, or to someone who is working.']]},
+{id:'me',n:2,title:'Me, You, Them',yo:'Èmi àti ìwọ',tip:'Yoruba pronouns are short, and tone changes them: “o” means you, “ó” means he, she or it.',items:[
+ ['mo','I',''],['o','you (one person)','Compare with “ó” (he / she / it).'],['ó','he / she / it','Yoruba has no he/she split.'],
+ ['a','we',''],['ẹ','you (many people, or an elder)','Also the respectful “you.”'],['wọ́n','they',''],
+ ['orúkọ','name',''],['mi','my / me',''],
+ ['Orúkọ mi ni Ṣọlá','My name is Shola','Swap in your own name after “ni.”'],
+ ['Kí ni orúkọ rẹ?','What is your name?','']]},
+{id:'num',n:3,title:'Numbers 1–10',yo:'Nọ́ńbà',tip:'Past 10, Yoruba adds and subtracts. 11 is ọ̀kanlá (10+1), 15 is ẹ̀ẹ́dógún (20−5), and 25 is ẹ̀ẹ́dọ́gbọ̀n (30−5). Sources spell a few tone marks slightly differently.',items:[
+ ['ọ̀kan','one (1)',''],['èjì','two (2)',''],['ẹ̀ta','three (3)',''],['ẹ̀rin','four (4)',''],['àrún','five (5)',''],
+ ['ẹ̀fà','six (6)',''],['èje','seven (7)',''],['ẹ̀jọ','eight (8)',''],['ẹ̀sán','nine (9)',''],['ẹ̀wá','ten (10)','']]},
+{id:'fam',n:4,title:'Family and Friends',yo:'Ẹbí',tip:'Yoruba has separate words for older and younger siblings, because age and respect matter.',items:[
+ ['ẹbí','family',''],['bàbá','father',''],['ìyá','mother',''],['ọmọ','child',''],
+ ['ẹ̀gbọ́n','older brother or sister','Used for anyone older than you in the family.'],['àbúrò','younger brother or sister',''],
+ ['bàbá àgbà','grandfather',''],['ìyá àgbà','grandmother',''],['ọ̀rẹ́','friend',''],['ọkọ','husband','Compare ọkọ̀ (vehicle). Tone changes the meaning.'],['ìyàwó','wife','']]},
+{id:'things',n:5,title:'Everyday Things',yo:'Nǹkan ojoojúmọ́',tip:'“ilé” is house and “ìwé” is book. Put them together as ilé-ìwé and you get school, literally “house of books.”',items:[
+ ['omi','water',''],['oúnjẹ','food',''],['ìrẹsì','rice',''],['ẹja','fish',''],['ẹyin','egg',''],
+ ['ilé','house / home',''],['ilé-ìwé','school','Literally “house of books.”'],['ìwé','book',''],['ọjà','market',''],['aṣọ','clothes',''],
+ ['ajá','dog',''],['ológbò','cat',''],['òjò','rain',''],['oòrùn','sun','']]},
+{id:'days',n:6,title:'Days of the Week',yo:'Àwọn ọjọ́',tip:'“ọjọ́” means day and “ọ̀sẹ̀” means week. Most day names start with Ọjọ́.',items:[
+ ['ọjọ́','day',''],['ọ̀sẹ̀','week',''],['Ọjọ́ Àìkú','Sunday',''],['Ọjọ́ Ajé','Monday',''],['Ọjọ́ Ìṣẹ́gun','Tuesday',''],
+ ['Ọjọ́rú','Wednesday',''],['Ọjọ́bọ̀','Thursday',''],['Ọjọ́ Ẹtì','Friday',''],['Ọjọ́ Àbámẹ́ta','Saturday','']]},
+{id:'verbs',n:7,title:'Action Words',yo:'Ìṣe',tip:'Yoruba verbs do not change for who is doing them. “jẹ” is eat whether it is I, you or they. Watch tone: kọ means write, kọ́ means learn.',items:[
+ ['jẹun','eat',''],['mu','drink',''],['sùn','sleep',''],['kà','read',''],['kọ','write','Compare kọ́ (learn).'],['kọ́','learn','Compare kọ (write).'],
+ ['sọ̀rọ̀','speak',''],['wá','come',''],['lọ','go',''],['ṣeré','play',''],['rí','see',''],['gbọ́','hear','']]},
+{id:'sent',n:8,title:'Build Sentences',yo:'Gbólóhùn',build:true,tip:'Basic order is subject, verb, object, like English. Tap the words in the right order.',items:[
+ ['Mo lọ sí ilé-ìwé','I go to school',''],['Mo jẹ ìrẹsì','I eat rice',''],['Mo wà dáadáa','I am fine',''],
+ ['Mo fẹ́ omi','I want water',''],['Ó lọ sí ọjà','She goes to the market','Ó can also mean he. Context decides.'],['Orúkọ mi ni Ṣọlá','My name is Shola','']]}
+];
+
+const ALPHA=[
+['A','ah, like “father”','ajá','dog'],['B','b as in “boy”','bàbá','father'],['D','d as in “dog”','dúdú','black'],['E','ay as in “day,” but shorter','èdè','language'],
+['Ẹ','eh as in “bed”','ẹja','fish'],['F','f as in “fun”','fẹ́','want'],['G','g as in “go”'],['Gb','g and b said together in one quick pop, not two sounds','gbọ́','hear'],
+['H','h as in “hat”'],['I','ee as in “see”','ilé','house'],['J','j as in “jump”','jẹun','eat'],['K','k as in “kite”','kà','read'],
+['L','l as in “lamp”','lọ','go'],['M','m as in “moon”','mu','drink'],['N','n as in “net”'],['O','oh as in “oat,” but shorter','oúnjẹ','food'],
+['Ọ','aw as in “law”','ọmọ','child'],['P','kp: lips and back of the throat close at once, like a “k” and “p” together','pẹ̀lẹ́','gently / sorry'],['R','a light rolled r, close to the Spanish r','rárá','no'],
+['S','s as in “sun”','sùn','sleep'],['Ṣ','sh as in “shoe”','ṣé','thanks'],['T','t as in “top”'],['U','oo as in “moon”'],['W','w as in “water”','wá','come'],['Y','y as in “yes”','yàrá','room']];
+const SPECIAL=['Ẹ','Ọ','Ṣ','Gb','P'];
+
+const TONES={L:{mark:'à',nm:'Low',solf:'do',hz:220,y:72},M:{mark:'a',nm:'Mid',solf:'re',hz:294,y:45},H:{mark:'á',nm:'High',solf:'mi',hz:392,y:18}};
+const PAIRS=[
+ {w:'ọkọ',en:'husband',t:'MM'},{w:'ọkọ̀',en:'vehicle',t:'ML'},{w:'ọkọ́',en:'hoe',t:'MH'},
+ {w:'igba',en:'200',t:'MM'},{w:'ìgbà',en:'time',t:'LL'},{w:'igbá',en:'calabash',t:'MH'}];
+
+/* ===== 02-courses.js  The 21 courses, four tiers, and the extra lessons they need. ===== */
+/* ---------- course catalogue: 21 courses in 4 tiers ----------
+   Each lesson ("unit") is {id,title,yo,tip,items:[[yorùbá,english,note]]}.
+   Special lesson types:  build:true  -> tap-the-words sentence builder
+                          read:{...}  -> reading passage with questions
+                          oneway:true -> only "Yorùbá -> English" questions (uses ask)
+   Courses list their lesson ids, and may link to a feature page (link). */
+const TIERS=[
+ {id:'b',name:'Beginner',goal:'Foundations and survival Yorùbá: greetings, tones and a core vocabulary.'},
+ {id:'i',name:'Intermediate',goal:'Move from single words to real, flowing everyday conversations.'},
+ {id:'h',name:'Hard',goal:'Longer sentences, nuance and deeper grammar control.'},
+ {id:'x',name:'Beyond',goal:'Cultural depth, dialects and real-world practice.'}];
+
+UNITS.push(
+/* Course 1: tones and orthography */
+{id:'t1',title:'Tone marks',yo:'Àmì ohùn',tip:'Yorùbá has three tones. A grave mark ( ̀ ) is low, no mark is mid, and an acute mark ( ´ ) is high. The same letters with different tones are different words.',items:[
+ ['à','low tone (grave mark)','Think “do.”'],['a','mid tone (no mark)','Think “re.”'],['á','high tone (acute mark)','Think “mi.”'],
+ ['ọkọ','husband','Both syllables are mid.'],['ọkọ̀','vehicle','Mid, then low.'],['ọkọ́','hoe','Mid, then high.']]},
+{id:'t2',title:'Special letters and nasal vowels',yo:'Àwọn lẹ́tà',tip:'Dots under ẹ, ọ and ṣ change the sound. A vowel followed by n is nasal: the n colors the vowel instead of being a separate sound.',items:[
+ ['ẹ','sounds like “e” in bed',''],['ọ','sounds like “aw” in law',''],['ṣ','sounds like “sh”',''],['gb','one sound: g and b together',''],['p','said like “kp”',''],
+ ['ọkùnrin','man','The “in” at the end is a nasal vowel.'],['obìnrin','woman','Also has a nasal vowel.'],['ìrẹsì','rice','Practise ẹ and the low tones.']]},
+{id:'t3',title:'Same letters, new meaning',yo:'Ohùn yàtọ̀',tip:'Tone is part of the spelling. Read the marks carefully.',items:[
+ ['igba','two hundred',''],['ìgbà','time',''],['igbá','calabash',''],['ilé','house',''],['ilẹ̀','ground / land',''],
+ ['kọ','write',''],['kọ́','learn',''],['ọkọ̀','vehicle',''],['ọkọ','husband','']]},
+/* Course 2 */
+{id:'resp',title:'Respect and manners',yo:'Ìwà ọmọlúàbí',tip:'Many Yorùbá greetings fit what the person is doing. Starting with “Ẹ” shows respect.',items:[
+ ['Ẹ kú iṣẹ́','Well done on your work','Said to someone working or who has just finished.'],['Ẹ kú àbọ̀','Welcome back','Said to someone who has returned.'],
+ ['Ẹ kú ilé','Greetings to the people at home',''],['Ẹ kú ọdún','Happy festival / holiday',''],['Ẹ kú ọjọ́ ìbí','Happy birthday',''],
+ ['Ẹ jọ̀ọ́','Please / excuse me',''],['Ẹ má bínú','Do not be offended / sorry',''],['Ẹ ṣé púpọ̀','Thank you very much','']]},
+/* Course 3 */
+{id:'house',title:'Around the house',yo:'Nínú ilé',tip:'Say “ilé” for house. Many house words start with “i.”',items:[
+ ['ilẹ̀kùn','door',''],['fèrèsé','window',''],['tábìlì','table',''],['àga','chair',''],['ibùsùn','bed',''],['ìkòkò','pot',''],['àwo','plate',''],['ṣíbí','spoon',''],['iná','fire / light','']]},
+{id:'food',title:'Food',yo:'Oúnjẹ',tip:'Food words you will hear at any Yorùbá table.',items:[
+ ['iṣu','yam',''],['ẹ̀wà','beans',''],['ọ̀gẹ̀dẹ̀','banana',''],['ọsàn','orange',''],['ata','pepper',''],['iyọ̀','salt',''],['ẹran','meat',''],['àkàrà','bean cake',''],['ọbẹ̀','soup / stew','']]},
+/* Course 4 */
+{id:'num2',title:'Bigger numbers',yo:'Nọ́ńbà tó tóbi',tip:'Counting past 10 builds on “lá” (ten plus): ọ̀kanlá is 11. Tens have their own words.',items:[
+ ['ọ̀kanlá','eleven (11)',''],['èjìlá','twelve (12)',''],['ẹ̀talá','thirteen (13)',''],['ẹ̀rinlá','fourteen (14)',''],['ogún','twenty (20)',''],
+ ['ọgbọ̀n','thirty (30)',''],['ogójì','forty (40)',''],['àádọ́ta','fifty (50)',''],['ọgọ́rùn-ún','one hundred (100)',''],['igba','two hundred (200)','']]},
+{id:'time',title:'Telling time',yo:'Àkókò',tip:'Time words: today, tomorrow, yesterday, and times of day.',items:[
+ ['ìṣẹ́jú','minute',''],['wákàtí','hour',''],['oṣù','month',''],['ọdún','year',''],['òní','today',''],['ọ̀la','tomorrow',''],['àná','yesterday',''],
+ ['òwúrọ̀','morning',''],['ọ̀sán','daytime / afternoon',''],['alẹ́','night / evening',''],['báyìí','now','']]},
+/* Course 5 */
+{id:'poss',title:'My, your, their',yo:'Ti èmi, ti ìwọ',tip:'Words for “my” and “your” come after the noun: ilé mi is “house my.”',items:[
+ ['ilé mi','my house',''],['ilé rẹ','your house',''],['ilé rẹ̀','his / her house','The low tone on rẹ̀ matters.'],['ilé wa','our house',''],['ilé yín','your (many) house',''],['ilé wọn','their house','']]},
+{id:'sent2',title:'More sentences',yo:'Àwọn gbólóhùn mìíràn',build:true,tip:'Order is subject, verb, object. Tap the words in order.',items:[
+ ['Mo rí ajá','I see a dog',''],['O jẹ ẹja','You eat fish',''],['Ó mu omi','He drinks water',''],['A lọ sí ọjà','We go to the market',''],['Wọ́n kọ ìwé','They write a book',''],['Mo kà ìwé','I read a book',''],['Ó sùn','She sleeps','']]},
+/* Course 6 */
+{id:'dir',title:'Asking directions',yo:'Bíbèèrè ọ̀nà',tip:'Ask “Ibo ni … wà?” to say “Where is …?”',items:[
+ ['Ibo ni ọjà wà?','Where is the market?',''],['ọ̀tún','right',''],['òsì','left',''],['tààrà','straight ahead',''],['nítòsí','near',''],['jìnnà','far',''],['dúró','stop / wait',''],['Mo sọnù','I am lost','']]},
+{id:'shop',title:'Shopping and money',yo:'Ríra nǹkan',tip:'“Èló ni?” is the question you will use most in a market.',items:[
+ ['Èló ni èyí?','How much is this?',''],['owó','money',''],['Mo fẹ́ ra èyí','I want to buy this',''],['ra','buy',''],['tà','sell',''],['Ó wọ́n jù','It is too expensive',''],['kékeré','small',''],['ńlá','big','']]},
+{id:'help',title:'Getting help',yo:'Bíbèèrè ìrànlọ́wọ́',tip:'Handy phrases for when you need a hand.',items:[
+ ['Ràn mí lọ́wọ́','Help me',''],['Ṣé o lè ràn mí lọ́wọ́?','Can you help me?',''],['Ibo ni ilé ìgbọ̀nsẹ̀ wà?','Where is the toilet?',''],['Mo ń kọ́ Yorùbá','I am learning Yorùbá',''],['Jọ̀wọ́ sọ̀rọ̀ díẹ̀díẹ̀','Please speak slowly','']]},
+/* Course 7 */
+{id:'asp1',title:'Tense and aspect markers',yo:'Àmì àsìkò',tip:'Yorùbá verbs do not change for tense. Small marker words and time words do the work.',items:[
+ ['ń','marks an action in progress (is doing)','Mo ń jẹun means I am eating.'],['ti','marks “already” (has done)','Mo ti jẹun means I have eaten.'],['máa','marks the future (will)','Mo máa jẹun means I will eat.'],
+ ['lánàá','yesterday','Used for past time. The verb does not change.'],['lónìí','today',''],['lọ́la','tomorrow','']]},
+{id:'asp2',title:'Now, done and later',yo:'Báyìí, tán, àti lẹ́yìn',build:true,tip:'Build each sentence and notice which little word sets the time.',items:[
+ ['Mo ń jẹun','I am eating',''],['Mo ti jẹun','I have eaten',''],['Mo máa jẹun','I will eat',''],['Ó ń sùn','He is sleeping',''],['Ó ti sùn','She has gone to sleep',''],['Wọ́n ń kọ ìwé','They are writing a book',''],['Mo lọ sí ọjà lánàá','I went to the market yesterday','']]},
+/* Course 8 */
+{id:'qw',title:'Question words',yo:'Àwọn ọ̀rọ̀ ìbéèrè',tip:'Most questions start with a question word. Yes-or-no questions often start with “Ṣé.”',items:[
+ ['Kí ni èyí?','What is this?',''],['Ta ni yìí?','Who is this?',''],['Ibo ni o ń lọ?','Where are you going?',''],['Nígbà wo?','When?',''],['Kí ló dé?','Why? / What is wrong?',''],['Mélòó?','How many?',''],['Èwo ni?','Which one?',''],['Ṣé o fẹ́ omi?','Do you want water?','']]},
+{id:'neg',title:'Saying no and not',yo:'Àìsí',tip:'“Ò” and “kò” go before the verb to mean not: mi ò is “I do not,” kò is “he, she or it does not.”',items:[
+ ['Mi ò fẹ́ omi','I do not want water',''],['Kò sí omi','There is no water',''],['Kò dára','It is not good',''],['A ò lọ','We are not going',''],['Wọn kò wá','They did not come',''],['Mi ò jẹun','I am not eating / I have not eaten','']]},
+/* Course 9 */
+{id:'eat',title:'Ordering and eating',yo:'Jíjẹ oúnjẹ',tip:'Useful for the table and for ordering food.',items:[
+ ['Mo fẹ́ jẹ àkàrà','I want to eat bean cake',''],['Ẹ jọ̀ọ́, mo fẹ́ omi','Please, I want water',''],['Ó dùn','It is sweet / tasty',''],['Mo yó','I am full',''],['Ebi ń pa mí','I am hungry',''],['Òùngbẹ ń gbẹ mí','I am thirsty','']]},
+{id:'bargain',title:'Market bargaining',yo:'Ríra àti títà',tip:'Bargaining is friendly. Smile and keep it polite.',items:[
+ ['Dín owó rẹ̀ kù','Reduce its price',''],['Ó wọ́n jù','It is too expensive',''],['Ṣé o lè dín in kù?','Can you reduce it?',''],['Mo máa san ẹgbẹ̀rún kan','I will pay one thousand',''],['Ó dára, mo ra','Okay, I will buy it','']]},
+{id:'party',title:'Celebrations',yo:'Ayẹyẹ',tip:'Words you will hear at weddings and festivals.',items:[
+ ['ayẹyẹ','celebration / party',''],['ìgbéyàwó','wedding',''],['aṣọ ìbílẹ̀','traditional clothes',''],['ìlù','drum',''],['ijó','dance',''],['orin','song',''],['ẹ̀bùn','gift',''],['Ẹ kú oríire','Congratulations',''],['Ẹ kú ayẹyẹ','Greetings on the celebration','']]},
+/* Course 10 */
+{id:'dverbs',title:'Daily action words',yo:'Ìṣe ojoojúmọ́',tip:'Verbs for a normal day.',items:[
+ ['dìde','wake up / stand up',''],['wẹ̀','bathe / wash',''],['ṣiṣẹ́','work',''],['sinmi','rest',''],['ṣe oúnjẹ','cook',''],['padà','return',''],['fọ̀ aṣọ','wash clothes','']]},
+{id:'routine',title:'My day',yo:'Ọjọ́ mi',build:true,tip:'Put a day together, one sentence at a time.',items:[
+ ['Mo dìde ní òwúrọ̀','I wake up in the morning',''],['Mo wẹ̀ ní òwúrọ̀','I bathe in the morning',''],['Mo ṣiṣẹ́ ní ilé','I work at home',''],['Mo ń kàwé ní alẹ́','I study at night',''],['Mo sùn ní alẹ́','I sleep at night','']]},
+/* Course 11 */
+{id:'adj',title:'Describing words',yo:'Àwọn ọ̀rọ̀ àpèjúwe',tip:'Describing words follow the noun: ilé ńlá is “house big.”',items:[
+ ['ńlá','big',''],['kékeré','small',''],['tuntun','new',''],['gíga','tall',''],['kúkúrú','short',''],['dára','good',''],['burú','bad',''],['gbóná','hot',''],['tútù','cold',''],['dùn','sweet',''],['funfun','white',''],['dúdú','black',''],['pupa','red',''],['lẹ́wà','beautiful','']]},
+{id:'comp',title:'Comparing things',yo:'Fífi wé',build:true,tip:'“ju … lọ” means more than: A tóbi ju B lọ.',items:[
+ ['Ilé yìí tóbi ju ilé yẹn lọ','This house is bigger than that house',''],['Mo ga ju Ayọ̀ lọ','I am taller than Ayọ̀',''],['Ó dára ju èyí lọ','It is better than this',''],['Ó rẹ̀ mí','I am tired',''],['Inú mi dùn','I am happy','']]},
+/* Course 13 */
+{id:'conj',title:'Joining words',yo:'Àwọn ọ̀rọ̀ àsopọ̀',tip:'These words join ideas into longer sentences.',items:[
+ ['àti','and',''],['ṣùgbọ́n','but',''],['tàbí','or',''],['nítorí pé','because',''],['bí … bá','if',''],['nígbà tí','when',''],['pé','that',''],['nítorí náà','therefore','']]},
+{id:'conj2',title:'Longer sentences',yo:'Gbólóhùn gígùn',build:true,tip:'Build sentences with because, but and if.',items:[
+ ['Mo fẹ́ lọ, ṣùgbọ́n mi ò ní owó','I want to go, but I have no money',''],['Bí o bá wá, èmi yóò dúró','If you come, I will wait',''],['Mo sùn nítorí pé ó rẹ̀ mí','I slept because I was tired',''],['Ó sọ pé òun ń bọ̀','He said that he is coming','']]},
+/* Course 14 */
+{id:'idi',title:'Feelings and body words',yo:'Ọ̀rọ̀ inú àti ara',tip:'Yorùbá often talks about feelings through the body. The meaning is not word for word.',items:[
+ ['Inú mi dùn','I am happy','Literally: “my inside is sweet.”'],['Inú mi bàjẹ́','I am upset','Literally: “my inside is spoiled.”'],['Ó ní ọkàn rere','He / she has a kind heart','Literally: “has a good heart.”'],
+ ['Orí ń fọ́ mi','I have a headache','Literally: “my head is breaking me.”'],['Ikùn ń run mí','I have a stomach ache','Literally: “my stomach is hurting me.”'],['Ó rẹ̀ mí','I am tired','']]},
+/* Course 15 */
+{id:'opin',title:'Giving your opinion',yo:'Sísọ èrò rẹ',tip:'Phrases for explaining what you think.',items:[
+ ['Mo rò pé…','I think that…',''],['Mo gbà','I agree',''],['Mi ò gbà','I disagree',''],['Ní èrò tèmi','In my opinion',''],['Ó ṣe pàtàkì','It is important',''],['ìròyìn','news',''],['ìjọba','government',''],['ìdìbò','election',''],['ọjọ́ iwájú','the future',''],['ètò','plan','']]},
+/* Course 16 */
+{id:'read1',title:'Read: Meet Ayọ̀',yo:'Ka èyí',read:{
+ text:'Orúkọ mi ni Ayọ̀. Mo ń gbé ní Ìbàdàn. Mo ní àbúrò méjì. Mo lọ sí ilé-ìwé ní ọjọ́ Ajé. Mo fẹ́ràn láti kàwé.',
+ en:'My name is Ayọ̀. I live in Ibadan. I have two younger siblings. I go to school on Monday. I like to read.',
+ qs:[['Where does Ayọ̀ live?',['Ibadan','Lagos','Oyo','Abeokuta'],0],['How many younger siblings does Ayọ̀ have?',['One','Two','Three','None'],1],['What does Ayọ̀ like to do?',['Read','Cook','Sing','Dance'],0]]},
+ tip:'Read the passage slowly, then answer the questions. Tap the speaker to hear it if your device has a Yorùbá voice.'},
+{id:'read2',title:'Read: At the market',yo:'Ka èyí',read:{
+ text:'Mo lọ sí ọjà lónìí. Mo fẹ́ ra ìrẹsì àti ẹja. Ìrẹsì wọ́n jù. Mo ra ẹja méjì. Mo dúpẹ́ lọ́wọ́ olùtà.',
+ en:'I went to the market today. I want to buy rice and fish. The rice is too expensive. I bought two fish. I thanked the seller.',
+ qs:[['What was too expensive?',['The rice','The fish','The market','The book'],0],['What did the writer buy?',['Two fish','Rice','Two rice','Nothing'],0],['Who did the writer thank?',['The seller','A teacher','A driver','A friend'],0]]},
+ tip:'Look for words you know: ọjà, ìrẹsì, ẹja, owó.'},
+/* Course 17 */
+{id:'formal',title:'Work and school language',yo:'Èdè iṣẹ́ àti ilé-ìwé',tip:'More formal words for offices, classrooms and meetings.',items:[
+ ['Ẹ káàbọ̀, ẹ jókòó','Welcome, please sit down',''],['ọ̀gá','boss / sir',''],['olùkọ́','teacher',''],['oníṣòwò','trader / businessperson',''],['iṣẹ́','work / job',''],['ìpàdé','meeting',''],['ìbéèrè','question',''],['Mo dúpẹ́','I give thanks',''],['owó oṣù','salary',''],['Ẹ ṣeun','Thank you (formal)','']]},
+{id:'titles',title:'Titles and ceremony',yo:'Oyè àti ayẹyẹ',tip:'Ceremonial speech is learned from elders. These titles are a starting point.',items:[
+ ['ọba','king',''],['Kábíyèsí','Your Majesty (title for a king)',''],['olóyè','chief / titleholder',''],['baálẹ̀','head of a village / town',''],['Aláàfin','title of the king of Ọ̀yọ́',''],['Ọ̀ọ̀ni','title of the king of Ilé-Ifẹ̀','']]},
+/* Course 18 */
+{id:'owe',title:'Proverbs (Òwe)',yo:'Òwe',tip:'Elders use proverbs to make a point gently. Learn what each one means, not just the words.',items:[
+ ['Ìwà lẹ̀wà ọmọ ènìyàn','Character is a person’s beauty',''],['Bí ọmọdé bá mọ ọwọ́ wẹ̀, yóò bá àgbà jẹun','A child who washes their hands well may eat with elders','Good manners earn a seat at the table.'],
+ ['Òwe lẹṣin ọ̀rọ̀','A proverb is the horse of speech','The full saying adds that proverbs help you find lost words.'],['Àgbájọ ọwọ́ la fi ń sọ̀yà','Working together gets things done','Unity is strength.']]},
+{id:'folk',title:'Folktales',yo:'Ìtàn àti àlọ́',tip:'Folktales often begin with a call and a reply between the storyteller and the listeners.',items:[
+ ['Àlọ́ o!','Storyteller’s call: “A story!”','The listeners answer “Àlọ́!”'],['Àlọ́!','The listeners’ reply',''],['Ìjàpá','Tortoise, the clever trickster of many tales',''],['ìtàn','story / history',''],['orin','song','']]},
+/* Course 19 */
+{id:'dial',title:'Where do they speak what?',yo:'Èdè àdúgbò',oneway:true,ask:'Which dialect area is this place in?',tip:'Standard Yorùbá is used at school and on radio. Hometown speech can differ in sounds and words. Scholars group the dialects into Northwest, Central, Southeast and Northeast.',items:[
+ ['Ọ̀yọ́','Northwest',''],['Ìbàdàn','Northwest',''],['Abẹ́òkúta (Ẹ̀gbá)','Northwest',''],['Ilé-Ifẹ̀','Central',''],['Ìlẹ́sà (Ìjẹ̀ṣà)','Central',''],['Ìjẹ̀bú','Southeast',''],['Òndó','Southeast',''],['Ẹ̀kìtì','Northeast','']]}
+);
+
+const COURSES=[
+ {id:1,tier:'b',title:'Yorùbá Tones and Orthography',blurb:'Low, mid and high tones, special letters, nasal vowels and the alphabet.',units:['t1','t2','t3'],link:{page:'tones',label:'Practise in the Tone Lab'}},
+ {id:2,tier:'b',title:'Greetings, Etiquette and Respect',blurb:'Morning and afternoon greetings, respecting elders, polite expressions.',units:['greet','resp']},
+ {id:3,tier:'b',title:'Essential Nouns and Everyday Objects',blurb:'Family members, food and common household items.',units:['fam','things','house','food']},
+ {id:4,tier:'b',title:'Numbers, Time and Days',blurb:'Counting, telling time and the days of the week.',units:['num','num2','days','time']},
+ {id:5,tier:'b',title:'Sentence Structure and Pronouns',blurb:'Subject-verb-object, I, you, he, she, we and they.',units:['me','poss','sent','sent2']},
+ {id:6,tier:'b',title:'Survival Phrases and Travel',blurb:'Asking directions, shopping and market conversations.',units:['dir','shop','help']},
+ {id:7,tier:'i',title:'Tenses and Aspect',blurb:'Past, present and future markers in Yorùbá.',units:['asp1','asp2']},
+ {id:8,tier:'i',title:'Questions and Negation',blurb:'Who, what, where, why, and how to say no and not.',units:['qw','neg']},
+ {id:9,tier:'i',title:'Food, Culture and Social Life',blurb:'Ordering local dishes, ceremonies and market bargaining.',units:['eat','bargain','party']},
+ {id:10,tier:'i',title:'Action Verbs and Daily Routines',blurb:'Describe what you do at work, home and school.',units:['verbs','dverbs','routine']},
+ {id:11,tier:'i',title:'Adjectives and Comparisons',blurb:'Describe people, places, feelings and objects.',units:['adj','comp']},
+ {id:12,tier:'i',title:'Intermediate Listening and Audio Drills',blurb:'Train your ear with real recordings: pick the sentence or type what you hear.',units:[],link:{page:'audio',label:'Open the Audio Lab'}},
+ {id:13,tier:'h',title:'Complex Sentences and Conjunctions',blurb:'Because, although, if and then, and longer sentences.',units:['conj','conj2'],draft:true},
+ {id:14,tier:'h',title:'Idioms, Metaphors and Cultural Context',blurb:'Meanings that are not word for word.',units:['idi'],draft:true},
+ {id:15,tier:'h',title:'Debating, Opinions and Abstract Topics',blurb:'Express feelings, opinions, news and plans.',units:['opin'],draft:true},
+ {id:16,tier:'h',title:'Reading and Writing Graded Texts',blurb:'Read short passages and answer questions, then write your own.',units:['read1','read2'],link:{page:'write',label:'Try the Writing Lab'},draft:true},
+ {id:17,tier:'h',title:'Professional and Formal Yorùbá',blurb:'Work and school language, and the titles used in ceremonies.',units:['formal','titles'],draft:true},
+ {id:18,tier:'x',title:'Proverbs (Òwe) and Folklore',blurb:'The wisdom traditions at the center of Yorùbá speech.',units:['owe','folk'],draft:true},
+ {id:19,tier:'x',title:'Regional Dialect Variations',blurb:'How speech shifts across Egba, Ọ̀yọ́, Ìjẹ̀bú, Òndó and beyond.',units:['dial'],draft:true},
+ {id:20,tier:'x',title:'Real-World Conversation Practicum',blurb:'Chat and phone-call role plays at three levels, with fixes and a rating.',units:[],link:{page:'chat',label:'Open Chat practice'}},
+ {id:21,tier:'x',title:'Creative Writing and Composition',blurb:'Write notes, stories and letters, and get your orthography checked.',units:[],link:{page:'write',label:'Open the Writing Lab'}}
+];
+COURSES.forEach(c=>c.units.forEach((id,k)=>{const u=UNITS.find(x=>x.id===id);if(u){u.n=k+1;u.course=c.id}}));
+
+/* normalise every lesson into {yo,en,note,unit} items, then build the global word list */
+UNITS.forEach(u=>u.items=(u.items||[]).map(a=>({yo:a[0],en:a[1],note:a[2],unit:u.id})));
+const ALL=UNITS.flatMap(u=>u.items);
+
+/* ===== 03-core.js  Shared plumbing: registries, saved progress, helpers, sound, XP, badges, device speech.
+   Every other file plugs into the registries below:
+     VIEWS[name] = function returning HTML     ACT[name] = click handler   AFTER[name] = runs after the view renders
+     STOPS.push(fn)  = cleanup when the user leaves a view (timers, animation loops)
+   ===== */
+const VIEWS={},ACT={},AFTER={},STOPS=[],REG=[];   // REG: ids of games added with registerGame()
+
+/* ---------- saved progress (this browser only) ---------- */
+const KEY='ede-mi-v1';
+const DEF=()=>({xp:0,streak:0,maxStreak:0,last:'',done:{},calls:0,chats:0,writes:0,audioDone:0,coins:0,tower:0,
+  best:{},plays:{},badges:[],name:'',goal:30,today:{d:'',xp:0},sound:true});
+let P=DEF();
+try{const s=JSON.parse(localStorage.getItem(KEY)||'null');if(s&&typeof s==='object')P=Object.assign(P,s)}catch(e){}
+['done','best','plays'].forEach(k=>{if(!P[k]||typeof P[k]!=='object')P[k]={}});
+if(!Array.isArray(P.badges))P.badges=[];
+if(!P.today||typeof P.today!=='object')P.today={d:'',xp:0};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(P))}catch(e){}}
+const dayKey=d=>d.toLocaleDateString('en-CA');
+function liveStreak(){const t=new Date(),y=new Date();y.setDate(t.getDate()-1);return(P.last===dayKey(t)||P.last===dayKey(y))?P.streak:0}
+function bump(){const t=new Date(),y=new Date();y.setDate(t.getDate()-1);
+  if(P.last===dayKey(t))return;P.streak=(P.last===dayKey(y))?P.streak+1:1;P.last=dayKey(t);P.maxStreak=Math.max(P.maxStreak||0,P.streak)}
+const todayXP=()=>P.today.d===dayKey(new Date())?P.today.xp:0;
+/* Every XP award goes through here: counts the daily goal, keeps the streak, unlocks badges. */
+function addXP(n){n=Math.max(0,Math.round(n)||0);P.xp+=n;const k=dayKey(new Date());if(P.today.d!==k)P.today={d:k,xp:0};P.today.xp+=n;bump();checkBadges();save()}
+const level=()=>Math.floor(Math.sqrt(P.xp/40))+1;
+const levelFrac=()=>{const L=level(),a=40*(L-1)*(L-1),b=40*L*L;return(P.xp-a)/(b-a)};
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const shuf=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const unit=id=>UNITS.find(u=>u.id===id);
+const wnorm=s=>String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const uniqBy=(a,f)=>{const s=new Set();return a.filter(x=>{const k=f(x);if(s.has(k))return false;s.add(k);return true})};
+/* items from lessons the learner has finished (or everything, if none yet) */
+/* words the games draw from: your finished lessons (or everything at first), minus lessons that describe letters, places or tones */
+const GAME_SKIP=['t1','t2','dial','folk','owe'];
+const gameOk=()=>ALL.filter(i=>!GAME_SKIP.includes(i.unit)&&!/[“”]/.test(i.en)&&i.en.length<=36);
+const learnedItems=()=>{const ok=gameOk(),l=ok.filter(i=>P.done[i.unit]!==undefined);return l.length>=8?l:ok};
+/* Words matching filter f, from finished lessons if there are at least `min` of them, otherwise from every lesson. */
+function poolFor(f,min){const l=uniqBy(learnedItems().filter(f),i=>i.yo);return l.length>=min?l:uniqBy(gameOk().filter(f),i=>i.yo)}
+/* Global UI state. Not saved. */
+let S={view:'home',tier:'all',tt:{n:0,score:0,tone:null,pick:null,shown:false},g:null};
+
+/* ---------- sound: WebAudio beeps, no files needed ---------- */
+let ac;
+function ctx(){ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();return ac}
+function beep(f,t0,d,vol){const c=ctx(),o=c.createOscillator(),g=c.createGain();o.type='triangle';o.frequency.value=f;const v=vol||.28;
+  g.gain.setValueAtTime(0,t0);g.gain.linearRampToValueAtTime(v,t0+.03);g.gain.linearRampToValueAtTime(0,t0+d);
+  o.connect(g);g.connect(c.destination);o.start(t0);o.stop(t0+d+.05)}
+function playSeq(s,gap){try{const c=ctx();let t=c.currentTime+.05;for(const k of s){beep(TONES[k].hz,t,(gap||.5)-.08);t+=gap||.5}}catch(e){}}
+/* Short sound effects for games. The Profile page has a switch (P.sound). */
+const SFX={ok:[[660,0,.09],[880,.09,.12]],bad:[[220,0,.14],[165,.13,.2]],coin:[[988,0,.06],[1319,.06,.09]],
+  win:[[523,0,.1],[659,.1,.1],[784,.2,.1],[1047,.3,.22]],jump:[[440,0,.07],[587,.06,.08]],hit:[[150,0,.12],[110,.1,.22]],tick:[[520,0,.04]],flip:[[420,0,.05]]};
+function sfx(k){if(!P.sound)return;try{const t=ctx().currentTime+.01;(SFX[k]||[]).forEach(a=>beep(a[0],t+a[1],a[2],.2))}catch(e){}}
+
+/* ---------- toast ---------- */
+let toastT;
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toastT);toastT=setTimeout(()=>{t.hidden=true},5000)}
+
+/* ---------- device speech (needs a Yorùbá voice installed, which many devices lack) ---------- */
+let VOICES=[];
+function loadVoices(){try{VOICES=window.speechSynthesis?speechSynthesis.getVoices():[]}catch(e){VOICES=[]}}
+loadVoices();
+try{speechSynthesis.addEventListener('voiceschanged',()=>{loadVoices();if(S.view==='call')render()})}catch(e){}
+const yoVoice=()=>VOICES.find(v=>/^yo([-_]|$)/i.test(v.lang));
+const _punct=s=>String(s||'').replace(/[.,!?;:“”"()]/g,'').replace(/\s+/g,' ').trim();
+const _exact=s=>_punct(s).normalize('NFC').toLowerCase();
+const _loose=s=>' '+wnorm(_punct(s))+' ';
+function findClip(t){
+  if(typeof AUD==='undefined'||!AUD.clips.length)return null;
+  const pool=AUD.clips.filter(c=>c.text&&c.text.trim()),term=_exact(t),loose=_loose(t);
+  let c=pool.find(x=>_exact(x.text)===term);                                   // whole sentence, same tone marks
+  if(!c)c=pool.filter(x=>(' '+_exact(x.text)+' ').includes(' '+term+' '))      // contains the phrase, same tone marks
+          .sort((a,b)=>a.text.length-b.text.length)[0];
+  if(!c)c=pool.filter(x=>_loose(x.text).includes(loose))                       // contains it, ignoring tone marks
+          .sort((a,b)=>a.text.length-b.text.length)[0];
+  return c||null;
+}
+function speak(t){
+  const c=findClip(t);
+  if(c){playClip(c.id,.9);if(_exact(c.text)!==_exact(t))toast('Playing a recording that contains it: '+c.text);return true}
+  const v=yoVoice();
+  if(!v){toast('No recording or Yorùbá voice for this one yet.');return false}
+  try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.voice=v;u.lang=v.lang;u.rate=.8;speechSynthesis.speak(u);return true}catch(e){return false}
+}
+const SPK='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 8.5a5 5 0 0 1 0 7"/><path d="M19 6a8.5 8.5 0 0 1 0 12"/></svg>';
+const spkBtn=t=>`<button class="spk" data-act="speak" data-t="${esc(t)}" aria-label="Listen to ${esc(t)}">${SPK}</button>`;
+ACT.speak=d=>speak(d.t);
+
+/* ---------- badges ---------- */
+const unitsDone=()=>Object.keys(P.done).length;
+const coursesDone=()=>COURSES.filter(c=>{const p=courseProg(c);return p.done>=p.total}).length;
+const BADGES=[
+ {id:'first',t:'First step',d:'Finish a lesson',ok:()=>unitsDone()>=1},
+ {id:'ten',t:'Ten lessons',d:'Finish 10 lessons',ok:()=>unitsDone()>=10},
+ {id:'perfect',t:'Perfect run',d:'Score 100% on a lesson quiz',ok:()=>Object.values(P.done).some(v=>v>=100)},
+ {id:'course',t:'Course complete',d:'Finish every lesson in a course',ok:()=>coursesDone()>=1},
+ {id:'s3',t:'3-day streak',d:'Learn 3 days in a row',ok:()=>(P.maxStreak||0)>=3},
+ {id:'s7',t:'7-day streak',d:'Learn 7 days in a row',ok:()=>(P.maxStreak||0)>=7},
+ {id:'call',t:'Phone friend',d:'Finish a practice call or chat',ok:()=>P.calls>=1||(P.chats||0)>=1},
+ {id:'t10',t:'Tower builder',d:'Bank 10 tower pieces',ok:()=>P.tower>=10},
+ {id:'t50',t:'Tower master',d:'Bank 50 tower pieces',ok:()=>P.tower>=50},
+ {id:'run',t:'Fast feet',d:'Score 1,500 in the runner',ok:()=>(P.best.runner||0)>=1500},
+ {id:'voice',t:'Out loud',d:'Finish a voice game',ok:()=>['say','echo','recall'].some(k=>(P.plays[k]||0)>=1)},
+ {id:'xp',t:'500 XP',d:'Earn 500 XP',ok:()=>P.xp>=500},
+ {id:'ear',t:'Good ear',d:'Finish a listening round',ok:()=>P.audioDone>=1}];
+function checkBadges(){
+  for(const b of BADGES){let ok=false;try{ok=b.ok()}catch(e){}
+    if(ok&&!P.badges.includes(b.id)){P.badges.push(b.id);toast('Badge unlocked: '+b.t);sfx('win')}}
+}
+
+/* ---------- icons (24px line icons) ---------- */
+const ICON={
+ home:'<path d="M4 12l8-7 8 7"/><path d="M6 10v9h12v-9"/>',
+ review:'<rect x="4" y="6" width="14" height="12" rx="2"/><path d="M8 3h12v12"/>',
+ tones:'<path d="M3 12h3l3-7 4 14 3-7h5"/>',
+ alpha:'<path d="M5 19l5-14 5 14"/><path d="M7 14h6"/><path d="M19 8v11"/>',
+ call:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A15 15 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+ courses:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M8 7h7"/>',
+ audio:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="4" height="6" rx="1.5"/><rect x="17" y="14" width="4" height="6" rx="1.5"/>',
+ words:'<path d="M5 6h14M5 12h14M5 18h9"/>',
+ culture:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c3 3 3 15 0 18c-3-3-3-15 0-18z"/>',
+ games:'<rect x="3" y="8" width="18" height="10" rx="5"/><path d="M8 11v4M6 13h4"/><circle cx="15.5" cy="12" r=".6"/><circle cx="17.5" cy="14" r=".6"/>',
+ write:'<path d="M4 20l1-4L16 5l3 3L8 19z"/><path d="M14 7l3 3"/>',
+ profile:'<circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/>',
+ chat:'<path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/>',
+ trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0z"/><path d="M8 6H5a3 3 0 0 0 3 4M16 6h3a3 3 0 0 1-3 4"/><path d="M12 13v4M8 20h8M10 17h4"/>'};
+const ic=n=>`<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICON[n]}</svg>`;
+
+/* ===== 04-learn.js  Courses page (21 courses in 4 tiers), course detail, lessons, quizzes, results, flashcards ===== */
+
+/* ---------- quiz building ---------- */
+/* Multiple choice. Distractors are unique values so two options never read the same. */
+function mcQ(it,dir,pool){
+  const key=dir==='yo2en'?'en':'yo';
+  const seen=new Set([it[key]]),others=[];
+  for(const x of shuf(pool)){if(others.length>=3)break;if(!seen.has(x[key])){seen.add(x[key]);others.push(x[key])}}
+  return{type:'mc',dir,item:it,prompt:dir==='yo2en'?it.yo:it.en,answer:it[key],options:shuf([it[key],...others])};
+}
+function buildQ(it){const toks=it.yo.split(' ');return{type:'build',item:it,prompt:it.en,answer:toks,bank:shuf(toks.map((t,i)=>({t,i})))}}
+/* Reading passages: the questions come straight from the lesson data. */
+function readQs(u){return u.read.qs.map(a=>({type:'mc',dir:'read',item:{yo:u.read.text,en:u.read.en,note:''},prompt:a[0],answer:a[1][a[2]],options:shuf(a[1])}))}
+function makeQuiz(u){
+  let qs;
+  if(u.read)qs=readQs(u);
+  else if(u.build){qs=shuf(u.items).map(buildQ).concat(shuf(u.items).slice(0,2).map(it=>mcQ(it,'yo2en',u.items)));qs=shuf(qs)}
+  else if(u.oneway){qs=shuf(u.items).slice(0,8).map(it=>Object.assign(mcQ(it,'yo2en',u.items),{dir:'ask',label:u.ask}))}
+  else{const pool=u.items.length>=4?u.items:ALL;
+    const all=[];u.items.forEach(it=>{all.push(mcQ(it,'yo2en',pool));all.push(mcQ(it,'en2yo',pool))});
+    qs=shuf(all).slice(0,Math.min(10,all.length))}
+  qs.forEach(q=>q.tries=0);return qs;
+}
+
+/* ---------- course progress ---------- */
+/* Courses made of lessons count finished lessons. Practice-only courses finish when you complete one activity. */
+function courseProg(c){
+  if(c.units.length){const d=c.units.filter(id=>id in P.done).length;return{done:d,total:c.units.length}}
+  const m={12:P.audioDone,20:P.calls+(P.chats||0),21:P.writes}[c.id]||0;return{done:m>0?1:0,total:1};
+}
+const tierOf=id=>TIERS.find(t=>t.id===id);
+const nextUnit=()=>{for(const c of COURSES){const u=c.units.find(id=>!(id in P.done));if(u)return unit(u)}return null};
+
+function courseCard(c){
+  const p=courseProg(c),pct=Math.round(p.done/p.total*100),done=p.done>=p.total;
+  return `<button class="unit course${done?' done':''}" data-act="opencourse" data-id="${c.id}">
+    <span class="n">${done?'✓':c.id}</span>
+    <h3>${esc(c.title)}</h3>
+    <span class="meta">${esc(c.blurb)}</span>
+    <span class="cmeta"><span class="bar" aria-hidden="true"><i style="width:${pct}%"></i></span><span class="meta">${c.units.length?`${p.done}/${p.total} lessons`:(done?'Done':'Practice')}${c.draft?' · draft':''}</span></span>
+  </button>`;
+}
+function courses(){
+  const t=S.tier||'all',nx=nextUnit();
+  const tabs=[['all','All 21'],...TIERS.map(x=>[x.id,x.name])];
+  const doneN=coursesDone();
+  const groups=(t==='all'?TIERS:TIERS.filter(x=>x.id===t)).map(tr=>{
+    const list=COURSES.filter(c=>c.tier===tr.id);
+    return `<section class="tiersec"><div class="sec"><h2>${esc(tr.name)}</h2><span class="meta">${list.length} courses</span></div>
+      <p class="meta" style="margin:-6px 0 10px">${esc(tr.goal)}</p><div class="units">${list.map(courseCard).join('')}</div></section>`}).join('');
+  return `<div class="sec" style="padding-top:max(14px,env(safe-area-inset-top,0px))"><h2>Courses</h2><span class="meta">${doneN} of ${COURSES.length} complete</span></div>
+  ${nx?`<button class="unit" style="width:100%" data-act="open" data-id="${nx.id}"><span class="n">${nx.n||'•'}</span><h3>Continue: ${esc(nx.title)}</h3><span class="yoname">${esc(nx.yo)}</span><span class="meta">Course ${nx.course}. ${esc(COURSES.find(c=>c.id===nx.course).title)}</span></button>`:''}
+  <div class="chips tabs" role="tablist" aria-label="Course tiers">${tabs.map(x=>`<button class="chip${t===x[0]?' on':''}" role="tab" aria-selected="${t===x[0]}" data-act="ctier" data-id="${x[0]}">${esc(x[1])}</button>`).join('')}</div>
+  ${groups}
+  <p class="fine">Courses marked “draft” were written with AI help and have not been checked by a Yorùbá teacher. Treat them as study notes and confirm with a fluent speaker. Tone marks and spellings also vary between sources and regions.</p>`;
+}
+function course(){
+  const c=COURSES.find(x=>x.id===S.cid)||COURSES[0],tr=tierOf(c.tier),p=courseProg(c);
+  const lessons=c.units.map(id=>unit(id)).map((u,k)=>{const b=P.done[u.id],d=b!==undefined;
+    const cnt=u.read?'reading passage':`${u.items.length} ${u.build?'sentences':'words'}`;
+    return `<button class="unit${d?' done':''}" data-act="open" data-id="${u.id}"><span class="n">${d?'✓':k+1}</span><h3>${esc(u.title)}</h3><span class="yoname">${esc(u.yo)}</span><span class="meta">${cnt}${d?' · best '+b+'%':''}</span></button>`}).join('');
+  const link=c.link?`<button class="unit linkcard" data-act="tab" data-v="${c.link.page}"><span class="n">${ic({tones:'tones',audio:'audio',call:'call',chat:'chat',write:'write'}[c.link.page]||'home')}</span><h3>${esc(c.link.label)}</h3><span class="meta">${c.id===12?'Counts when you finish a listening round (Audio Lab) or a Tone Tower game.':c.id===20?'Counts when you finish a practice chat or call.':c.id===21?'Counts when you get a piece of writing checked.':'Extra practice for this course.'}</span></button>`:'';
+  return `<div class="panel" style="margin-top:8px"><div class="eyebrow muted">${esc(tr.name)} · Course ${c.id}</div><h2 style="margin-top:6px">${esc(c.title)}</h2>
+    <p style="margin:8px 0 0">${esc(c.blurb)}</p>
+    <div class="bar" style="margin-top:14px" aria-hidden="true"><i style="width:${Math.round(p.done/p.total*100)}%"></i></div>
+    <div class="meta" style="margin-top:6px">${c.units.length?`${p.done} of ${p.total} lessons finished`:(p.done?'Done':'Not started')}</div>
+    ${c.draft?`<div class="note" style="margin-top:12px">Early draft. This course was written with AI help and has not been reviewed by a Yorùbá teacher. Confirm anything important with a fluent speaker.</div>`:''}</div>
+  ${c.units.length?`<div class="sec"><h2>Lessons</h2></div><div class="units">${lessons}</div>`:''}
+  ${link?`<div class="sec"><h2>Practice</h2></div><div class="units">${link}</div>`:''}`;
+}
+
+/* ---------- lesson screens ---------- */
+function learn(){
+  const u=unit(S.uid);
+  if(u.read){
+    return `<div class="top"><button class="x" data-act="leave" aria-label="Close lesson">×</button><div class="bar" aria-hidden="true"><i style="width:10%"></i></div></div>
+    <div class="panel"><div class="eyebrow muted">${esc(u.title)}</div><p style="margin:8px 0 0">${esc(u.tip)}</p></div>
+    <div class="panel card"><div class="eyebrow muted">Read</div><div class="yo" style="font-size:1.5rem;line-height:1.5;text-align:center">${esc(u.read.text)}</div>${spkBtn(u.read.text)}
+      <details class="note"><summary>Show English</summary><p style="margin:8px 0 0">${esc(u.read.en)}</p></details></div>
+    <div class="row"><button class="btn" data-act="quiz">Answer questions</button></div>`;
+  }
+  const it=u.items[S.i],last=S.i===u.items.length-1;
+  return `<div class="top"><button class="x" data-act="leave" aria-label="Close lesson">×</button><div class="bar" aria-hidden="true"><i style="width:${(S.i+1)/u.items.length*100}%"></i></div></div>
+  ${S.i===0&&u.tip?`<div class="panel"><div class="eyebrow muted">${esc(u.title)}</div><p style="margin:8px 0 0">${esc(u.tip)}</p></div>`:''}
+  <div class="panel card"><div class="eyebrow muted">New ${u.build?'sentence':'word'} · ${S.i+1} of ${u.items.length}</div>
+    <div class="big yo">${esc(it.yo)}</div>${spkBtn(it.yo)}<div class="en">${esc(it.en)}</div>
+    ${it.note?`<div class="note">${esc(it.note)}</div>`:''}</div>
+  <div class="row">${S.i>0?'<button class="btn alt" data-act="prev">Back</button>':''}
+    <button class="btn" data-act="${last?'quiz':'next'}">${last?'Start quiz':'Next'}</button></div>`;
+}
+
+function quiz(){
+  const c=S.cur,q=S.qs[S.qi];
+  const prog=S.qi/S.qs.length*100;
+  let body='';
+  if(q.type==='mc'){
+    const lab=q.dir==='yo2en'?'What does this mean?':q.dir==='en2yo'?'How do you say this in Yorùbá?':q.dir==='ask'?q.label:'Answer from the passage';
+    const yoPrompt=q.dir==='yo2en'||q.dir==='ask';
+    body=`${q.dir==='read'?`<div class="note" style="max-width:none"><span class="yo" style="font-size:1.1rem;font-weight:600">${esc(q.item.yo)}</span></div>`:''}
+    <div class="q-label">${esc(lab)}</div>
+    <div class="prompt${yoPrompt?' yo':''}">${esc(q.prompt)}</div>
+    <div class="opts">${q.options.map(o=>{let cl='opt'+(q.dir==='en2yo'?' yo':'');
+      if(c.answered){if(o===q.answer)cl+=' right';else if(o===c.picked)cl+=' wrong'}
+      return `<button class="${cl}" data-act="pick" data-v="${esc(o)}" ${c.answered?'disabled':''}>${esc(o)}</button>`}).join('')}</div>`;
+  }else{
+    body=`<div class="q-label">Build the sentence in Yorùbá</div><div class="prompt">${esc(q.prompt)}</div>
+    <div class="slots" aria-label="Your sentence">${c.placed.map((p,k)=>`<button class="tok" data-act="unplace" data-k="${k}" ${c.answered?'disabled':''}>${esc(q.bank.find(b=>b.i===p).t)}</button>`).join('')}</div>
+    <div class="bank">${q.bank.map(b=>`<button class="tok${c.placed.includes(b.i)?' used':''}" data-act="place" data-i="${b.i}" ${c.answered?'disabled':''}>${esc(b.t)}</button>`).join('')}</div>
+    ${c.answered?'':`<div class="row"><button class="btn" data-act="check" ${c.placed.length?'':'disabled'}>Check</button></div>`}`;
+  }
+  let fb='';
+  if(c.answered){
+    const wrong=(q.dir==='read'||q.dir==='ask')?`The answer is “${esc(q.answer)}”.`:`${esc(q.item.yo)} means “${esc(q.item.en)}”.${q.item.note?' '+esc(q.item.note):''}`;
+    fb=c.ok?`<div class="fb ok"><b>Correct</b>${q.item.note?`<span>${esc(q.item.note)}</span>`:''}</div>`
+      :`<div class="fb no"><b>Not quite</b><span>${wrong}</span></div>`;
+    fb+=`<div class="row"><button class="btn" data-act="cont">Continue</button></div>`;
+  }
+  return `<div class="top"><button class="x" data-act="leave" aria-label="Close quiz">×</button><div class="bar" aria-hidden="true"><i style="width:${prog}%"></i></div></div>
+  <div class="panel">${body}${fb}</div>`;
+}
+
+function results(){
+  const r=S.res,u=unit(S.uid),c=COURSES.find(x=>x.id===u.course);
+  const idx=c?c.units.indexOf(u.id):-1,nx=c&&idx>=0&&idx<c.units.length-1?unit(c.units[idx+1]):null;
+  return `<div class="panel cen"><div class="eyebrow muted">${esc(u.title)} complete</div>
+    <div class="big yo" style="margin:12px 0">${r.pct>=80?'Ẹ ṣé!':'Ẹ pẹ̀lẹ́'}</div>
+    <p style="margin:0" class="muted">${r.pct>=80?'Thank you for the effort, great work.':'Keep going, you are getting there.'}</p>
+    <div class="stats" style="justify-content:center;margin-top:18px"><span><b>${r.pct}%</b>first try</span><span><b>+${r.xp}</b>XP</span><span><b>${liveStreak()}</b>day streak</span></div>
+    ${r.missed.length?`<div class="grp" style="margin-top:20px;text-align:left"><div class="q-label">Words to revisit</div><div class="chips">${r.missed.map(m=>`<span class="chip"><span class="yo">${esc(m.yo.length>60?m.yo.slice(0,57)+'…':m.yo)}</span>${m.en?' · '+esc(m.en.length>50?m.en.slice(0,47)+'…':m.en):''}</span>`).join('')}</div></div>`:''}
+    <div class="row"><button class="btn alt" data-act="open" data-id="${u.id}">Try again</button>
+    ${nx?`<button class="btn" data-act="open" data-id="${nx.id}">Next lesson</button>`:`<button class="btn" data-act="leave">Back to course</button>`}</div></div>`;
+}
+
+function review(){
+  const R=S.rv;
+  if(!R){
+    const pool=reviewPool();
+    return `<div class="sec"><h2>Flashcards</h2></div>
+    <div class="panel"><p style="margin:0">${unitsDone()?`Flip through ${pool.length} words from the lessons you finished.`:'Finish a lesson to build your deck. Until then, here is a starter deck of greetings.'}</p>
+    <div class="row" style="justify-content:flex-start"><button class="btn" data-act="rvstart">Start ${pool.length} cards</button></div></div>`;
+  }
+  if(R.i>=R.deck.length){
+    return `<div class="sec"><h2>Flashcards</h2></div><div class="panel cen"><div class="big yo">Ó dára!</div><p class="muted">Deck finished. ${R.again} card${R.again===1?'':'s'} came back for another look.</p>
+    <div class="row"><button class="btn" data-act="rvstart">Go again</button></div></div>`;
+  }
+  const c=R.deck[R.i];
+  return `<div class="sec"><h2>Flashcards</h2><span class="meta">${Math.min(R.i+1,R.deck.length)} of ${R.deck.length}</span></div>
+  <button class="panel card" style="width:100%;border:1px solid var(--line);background:var(--surface)" data-act="flip" aria-label="Flip card">
+    <div class="big yo">${esc(c.yo)}</div>
+    ${R.flip?`<div class="en">${esc(c.en)}</div>${c.note?`<div class="note">${esc(c.note)}</div>`:''}`:'<div class="muted">Tap to see the meaning</div>'}</button>
+  <div class="row">${spkBtn(c.yo)}${R.flip?`<button class="btn alt" data-act="again">Again</button><button class="btn" data-act="gotit">Got it</button>`:''}</div>`;
+}
+const reviewPool=()=>{const l=uniqBy(ALL.filter(i=>P.done[i.unit]!==undefined),i=>i.yo);return l.length?l:unit('greet').items};
+
+/* ---------- finishing a lesson ---------- */
+function finishQuiz(){
+  const u=unit(S.uid),total=S.total,first=S.firstOK;
+  const pct=Math.round(first/total*100);
+  const xp=first*10+(pct===100?20:0);
+  P.done[u.id]=Math.max(P.done[u.id]||0,pct);addXP(xp);
+  const seen=new Set();const missed=S.missed.filter(m=>!seen.has(m.yo)&&seen.add(m.yo));
+  S.res={pct,xp,missed};go('results');
+}
+function setAnswer(ok,picked){
+  const q=S.qs[S.qi];S.cur.answered=true;S.cur.ok=ok;S.cur.picked=picked;
+  sfx(ok?'ok':'bad');
+  if(ok){if(q.tries===0)S.firstOK++}
+  else{S.missed.push(q.item);if(q.tries===0){const r=Object.assign({},q,{tries:1});if(r.type==='build')r.bank=shuf(r.bank);S.qs.push(r)}}
+  q.tries++;render();
+}
+
+/* ---------- actions ---------- */
+ACT.ctier=d=>{S.tier=d.id;render()};
+ACT.opencourse=d=>{S.cid=+d.id;go('course')};
+ACT.leave=()=>{S.cid?go('course'):go('courses')};
+ACT.open=d=>{const u=unit(d.id);S.uid=d.id;S.i=0;S.cid=u.course||S.cid;go('learn')};
+ACT.next=()=>{S.i++;go('learn')};
+ACT.prev=()=>{S.i--;go('learn')};
+ACT.quiz=()=>{const u=unit(S.uid);S.qs=makeQuiz(u);S.qi=0;S.total=S.qs.length;S.firstOK=0;S.missed=[];S.cur={placed:[],answered:false};go('quiz')};
+ACT.pick=d=>{const q=S.qs[S.qi];if(S.cur.answered)return;setAnswer(d.v===q.answer,d.v)};
+ACT.place=d=>{if(!S.cur.answered&&!S.cur.placed.includes(+d.i)){S.cur.placed.push(+d.i);render()}};
+ACT.unplace=d=>{if(!S.cur.answered){S.cur.placed.splice(+d.k,1);render()}};
+ACT.check=()=>{const q=S.qs[S.qi];const got=S.cur.placed.map(i=>q.bank.find(b=>b.i===i).t);setAnswer(got.join(' ')===q.answer.join(' '),null)};
+ACT.cont=()=>{S.qi++;S.cur={placed:[],answered:false};if(S.qi>=S.qs.length)finishQuiz();else{render();window.scrollTo(0,0)}};
+ACT.rvstart=()=>{S.rv={deck:shuf(reviewPool()),i:0,flip:false,again:0};render()};
+ACT.flip=()=>{S.rv.flip=!S.rv.flip;render()};
+ACT.again=()=>{const c=S.rv.deck[S.rv.i];S.rv.deck.push(c);S.rv.again++;S.rv.i++;S.rv.flip=false;render()};
+ACT.gotit=()=>{S.rv.i++;S.rv.flip=false;render()};
+
+VIEWS.courses=courses;VIEWS.course=course;VIEWS.learn=learn;VIEWS.quiz=quiz;VIEWS.results=results;VIEWS.review=review;
+
+/* ===== 05-tones.js  Tone parser, Tone Lab page and Alphabet page ===== */
+
+/* Reads the tone of each syllable from the marks: grave = Low (L), acute = High (H), no mark = Mid (M).
+   Counts vowels and marked syllabic nasals (ń, ǹ). A repeated unmarked vowel (long vowel) copies the tone before it. */
+function toneOf(word){
+  const ch=[...String(word).normalize('NFD')],out=[],V='aeiou';let prevV=null;
+  for(let i=0;i<ch.length;i++){
+    const b=ch[i].toLowerCase();
+    if(!V.includes(b)&&b!=='n'&&b!=='m'){prevV=null;continue}
+    let j=i+1,mk='';while(j<ch.length&&/[̀-ͯ]/.test(ch[j])){mk+=ch[j];j++}
+    const marked=/[̀́]/.test(mk),tone=mk.includes('̀')?'L':mk.includes('́')?'H':'M';
+    if(b==='n'||b==='m'){
+      const nx=(ch[j]||'').toLowerCase();
+      if(marked&&!(nx&&V.includes(nx)))out.push(tone);
+      prevV=null;i=j-1;continue;
+    }
+    if(prevV===b&&!marked&&out.length)out.push(out[out.length-1]);else out.push(tone);
+    prevV=b;i=j-1;
+  }
+  return out.join('');
+}
+const toneNames=p=>[...p].map(k=>TONES[k].nm).join(', ');
+
+function contour(t){
+  const n=t.length,w=40*n+20;
+  const pts=[...t].map((k,i)=>[30+i*40,TONES[k].y]);
+  return `<svg viewBox="0 0 ${w} 90" role="img" aria-label="Pitch pattern ${toneNames(t)}">
+    ${[18,45,72].map(y=>`<line x1="6" x2="${w-6}" y1="${y}" y2="${y}" stroke="var(--line)" stroke-width="1"/>`).join('')}
+    <polyline points="${pts.map(p=>p.join(',')).join(' ')}" fill="none" stroke="var(--indigo)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    ${pts.map(p=>`<circle cx="${p[0]}" cy="${p[1]}" r="6" fill="var(--gold)" stroke="var(--indigo)" stroke-width="2"/>`).join('')}</svg>`;
+}
+
+function tones(){
+  const T=S.tt;
+  return `<div class="sec"><h2>Tone Lab</h2></div>
+  <div class="panel"><p style="margin:0">Yorùbá has three tones. They change the meaning of a word, so “ọkọ” can mean husband, vehicle or hoe depending on pitch. Tap each to hear it. Teachers often link them to the notes <b>do, re, mi</b>.</p>
+    <div class="tone3" style="margin-top:14px">${['L','M','H'].map(k=>`<button class="tbtn" data-act="tone" data-k="${k}"><span class="m">${TONES[k].mark}</span><span class="nm">${TONES[k].nm}</span><span class="s">${TONES[k].solf} · ${k==='M'?'no mark':k==='L'?'grave ` mark':'acute ´ mark'}</span></button>`).join('')}</div></div>
+  <div class="sec"><h2>Same letters, new meaning</h2></div>
+  <div class="pairs">${PAIRS.map(p=>`<button class="pair" data-act="word" data-t="${p.t}" aria-label="Play ${esc(p.w)}">
+    <span class="w">${esc(p.w)}</span>${contour(p.t)}<span class="muted">${esc(p.en)}</span><span class="eyebrow" style="color:var(--indigo)">Play pitch</span></button>`).join('')}</div>
+  <div class="sec"><h2>Ear test</h2><span class="meta">${T.score} of ${T.n} right</span></div>
+  <div class="panel"><p style="margin:0 0 12px">${T.tone?'Which tone was it?':'Press play, then pick the tone you heard.'}</p>
+    <div class="row" style="margin:0 0 14px;justify-content:flex-start"><button class="btn alt" data-act="ear">${T.tone?'Play again':'Play a tone'}</button></div>
+    <div class="tone3">${['L','M','H'].map(k=>{let st='';if(T.shown){if(k===T.tone)st='border-color:var(--good);background:var(--good-bg)';else if(k===T.pick)st='border-color:var(--bad);background:var(--bad-bg)'}
+      return `<button class="tbtn" style="${st}" data-act="guess" data-k="${k}" ${!T.tone||T.shown?'disabled':''}><span class="m">${TONES[k].mark}</span><span class="nm">${TONES[k].nm}</span></button>`}).join('')}</div>
+    ${T.shown?`<div class="row"><button class="btn" data-act="earnext">Next tone</button></div>`:''}</div>
+  <div class="panel cult"><h3>Want a game?</h3><p>Tone Tower plays a pitch pattern and you pick the word that matches. Every right answer adds a piece to your tower.</p><div class="row" style="justify-content:flex-start"><button class="btn" data-act="tab" data-v="tower">Play Tone Tower</button></div></div>
+  <p class="fine">These are synthesized beeps that show pitch height, not a speaker’s voice. Real speech also glides between tones.</p>`;
+}
+
+function alpha(){
+  const sel=ALPHA.find(a=>a[0]===S.al)||ALPHA[0];
+  return `<div class="sec"><h2>Alphabet</h2><span class="meta">25 letters</span></div>
+  <div class="panel"><div class="detail"><div class="L">${esc(sel[0])}</div><div>${esc(sel[1])}</div>
+    ${sel[2]?`<div class="tools"><span class="chip"><span class="yo">${esc(sel[2])}</span> · ${esc(sel[3])}</span>${spkBtn(sel[2])}</div>`:''}</div></div>
+  <div class="letters" style="margin-top:14px">${ALPHA.map(a=>`<button class="let${SPECIAL.includes(a[0])?' sp':''}" data-act="letter" data-l="${esc(a[0])}" aria-pressed="${a[0]===sel[0]}">${esc(a[0])}</button>`).join('')}</div>
+  <p class="fine">Gold letters are the ones English does not have: ẹ, ọ, ṣ, gb and p (said as kp). Mixing up ẹ and e, or ọ and o, changes the word.</p>`;
+}
+
+ACT.tone=d=>playSeq([d.k]);
+ACT.word=d=>playSeq([...d.t]);
+ACT.ear=()=>{const T=S.tt;if(!T.tone||T.shown){T.tone='LMH'[Math.floor(Math.random()*3)];T.pick=null;T.shown=false}playSeq([T.tone]);render()};
+ACT.guess=d=>{const T=S.tt;T.pick=d.k;T.shown=true;T.n++;if(d.k===T.tone)T.score++;render()};
+ACT.earnext=()=>{const T=S.tt;T.tone='LMH'[Math.floor(Math.random()*3)];T.pick=null;T.shown=false;playSeq([T.tone]);render()};
+ACT.letter=d=>{S.al=d.l;render()};
+VIEWS.tones=tones;VIEWS.alpha=alpha;
+
+/* ===== 06-call.js  Chat (typed texting) and Call (spoken phone call).
+   Both use one conversation engine: Claude role-plays a Yorùbá speaker, corrects each line, and rates you at the end.
+   Needs the "sample" capability. A Call also needs a working microphone and speech recognition; if the device cannot
+   do that, the call rings, fails, and sends you back Home. Chat works anywhere Claude is available. ===== */
+let SAMPLE;
+(async()=>{try{SAMPLE=(await window.claude?.use('sample'))||null}catch(e){SAMPLE=null}if(S.view==='call')render()})();
+const SCEN=[
+ {id:'meet',lvl:'b',title:'Meet a new friend',name:'Ayọ̀',topics:'Greetings and introductions',who:'a friendly Yorùbá-speaking teenager who has just met the learner',goal:'greetings, names, how are you, thank you, goodbye'},
+ {id:'market',lvl:'b',title:'At the market',name:'Ìyá Bọ́lá',topics:'Numbers and everyday things',who:'a friendly market seller with rice, fish, eggs and water for sale',goal:'saying what they want, numbers 1 to 10, please and thank you'},
+ {id:'grand',lvl:'b',title:'Call your grandmother',name:'Ìyá àgbà',topics:'Family and respect',who:'the learner’s warm, loving grandmother, who likes polite, respectful greetings',goal:'respectful greetings with Ẹ, family words, asking how she is, food'},
+ {id:'day',lvl:'b',title:'Talk about your day',name:'Túndé',topics:'School and days of the week',who:'a classmate calling to chat about school and the week',goal:'days of the week, school, eat, drink, read, play, go'},
+ {id:'dinner',lvl:'b',title:'Dinner with family',name:'Bàbá',topics:'Food, family and thanks',who:'the learner’s father, calling everyone to come and eat',goal:'food, eat, drink, family words, thank you'},
+ {id:'free',lvl:'b',title:'Free chat',name:'Ṣadé',topics:'Anything simple',who:'a patient, friendly Yorùbá tutor who chats about whatever simple topic the learner brings up',goal:'whatever the learner wants to practise, kept at beginner level'},
+ {id:'weekend',lvl:'i',title:'Plans for the weekend',name:'Kẹ́mi',topics:'Future and past, questions',who:'a friend asking what the learner did yesterday and will do this weekend',goal:'past and future with time words, ń and máa, questions and negation'},
+ {id:'recipe',lvl:'i',title:'Cooking with Aunty',name:'Ǹtí Ṣadé',topics:'Food, verbs and describing words',who:'an aunt explaining how she cooks a meal',goal:'food words, action verbs, adjectives, comparisons'},
+ {id:'office',lvl:'a',title:'Formal call or interview',name:'Ọ̀gbẹ́ni Adéyẹmí',topics:'Formal speech',who:'a polite office manager taking a call, who expects formal, respectful Yorùbá',goal:'formal greetings with Ẹ, titles, polite requests, giving reasons with nítorí pé'},
+ {id:'debate',lvl:'a',title:'Share your opinion',name:'Fúnmi',topics:'Opinions and reasons',who:'a friend who loves a friendly debate about school, phones or music',goal:'giving opinions, agreeing and disagreeing, because, but and if sentences'}];
+const LVL={b:'simple beginner',i:'intermediate (short connected sentences, everyday topics, tense markers like ń, ti and máa)',a:'more advanced (longer sentences, conjunctions, opinions and polite formal speech)'};
+function rules(sc,mode){return `You are role-playing ${mode==='chat'?'a text chat':'a phone call'} so a teenage learner can practise Yorùbá. You are ${sc.name}, ${sc.who}. Practice goal: ${sc.goal}.
+Rules:
+- Speak ${LVL[sc.lvl||'b']} Yorùbá, one or two short sentences per turn, and keep the ${mode==='chat'?'chat':'call'} going with one easy question or prompt. Write your own Yorùbá with correct tone marks and underdots.
+${mode==='call'?'- The learner is SPEAKING, and their words arrive as speech-recognition text, which is often wrong for Yorùbá. Do not mark odd spellings as mistakes; if a line looks garbled, set fb.status to "none" and kindly ask them to say it again.\n':''}- The learner may write Yorùbá, English, or a mix. Many learners type without tone marks or underdots. Never treat missing diacritics as a mistake. You may mention it once as a small tip.
+- Check each learner message for real mistakes: a wrong word, word order, a wrong pronoun, or a tone mark that changes the meaning. Be kind and specific. If you are not sure a correction is right, say so in "why".
+Reply every turn with ONLY one JSON object and no other text, in this shape:
+{"yo":"your line in Yorùbá","en":"English translation of your line","hint":"2 to 6 English words nudging what the learner could say next","fb":{"status":"good or fix or english or none","said":"the learner's line exactly as written","better":"the best Yorùbá version, with tone marks","why":"one or two short, teen-friendly sentences"}}
+fb.status values: "good" means their Yorùbá was correct (better is their line with tone marks added, why is a short compliment); "fix" means there is a mistake to correct; "english" means they wrote English, so better is the Yorùbá they could have said; "none" means there is no learner message yet.`}
+function ratePrompt(c){
+  const lines=c.msgs.map(m=>m.who==='them'?`${c.sc.name}: ${m.yo} (${m.en})`:`Learner: ${m.text}   [check: ${m.fb?m.fb.status+' | better: '+m.fb.better+' | '+m.fb.why:'none'}]`).join('\n');
+  return `A teenage beginner just finished a Yorùbá practice ${c.mode==='chat'?'text chat':'phone call'} (${c.sc.title}). Here is the transcript with the check already made on each learner line:\n${lines}\n\nRate the learner's Yorùbá for a beginner. Be encouraging but honest. Do not penalise missing tone marks or underdots; mention them only as a tip. Reply with ONLY one JSON object and no other text, in this shape:\n{"stars":4,"score":78,"summary":"two short sentences","did_well":["up to 3 short items"],"work_on":[{"point":"short label","tip":"one sentence on how to fix it"}],"practice":[{"yo":"word or phrase","en":"meaning"}]}\nstars is a whole number 1 to 5, score is 0 to 100, work_on has up to 3 items, practice has up to 5 items.`;
+}
+const them=r=>({who:'them',yo:String(r.yo||''),en:String(r.en||'')});
+function normFb(f){f=f||{};const st=['good','fix','english'].includes(f.status)?f.status:'none';
+  return{status:st,said:String(f.said||''),better:String(f.better||''),why:String(f.why||'')}}
+function cleanRating(r){r=r||{};const n=Math.max(1,Math.min(5,Math.round(Number(r.stars))||3));
+  return{stars:n,score:Math.max(0,Math.min(100,Math.round(Number(r.score))||n*20)),summary:String(r.summary||''),
+    did_well:(Array.isArray(r.did_well)?r.did_well:[]).slice(0,3).map(String),
+    work_on:(Array.isArray(r.work_on)?r.work_on:[]).slice(0,3).map(w=>({point:String(w&&w.point||''),tip:String(w&&w.tip||'')})),
+    practice:(Array.isArray(r.practice)?r.practice:[]).slice(0,5).map(w=>({yo:String(w&&w.yo||''),en:String(w&&w.en||'')}))}}
+function sampleErr(e){const m={not_granted:'Claude is not allowed for this page. Allow it when asked, then try again.',sampling_disabled:'Claude is not available on this account.',rate_limited:'Too many requests at once. Wait a moment, then try again.',session_expired:'Please sign in again, then retry.',refused:'That message could not be answered. Try saying it a different way.',invalid_json:'The reply came back garbled. Send it again.'};return m[e&&e.code]||'Something went wrong reaching Claude. Try again.'}
+const fmt=ms=>{const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')};
+let ringI,tmrI;
+function ringOnce(){try{const c=ctx();const t=c.currentTime+.02;[0,.45].forEach(o=>{beep(440,t+o,.3);beep(480,t+o,.3)})}catch(e){}}
+function stopRing(){clearInterval(ringI);ringI=null}
+function startTimer(){clearInterval(tmrI);tmrI=setInterval(()=>{const el=$('#timer');if(el&&S.call&&S.call.start)el.textContent=fmt(Date.now()-S.call.start)},1000)}
+function autoSay(t){const c=S.call;if(c&&c.auto&&yoVoice())speak(t)}
+
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+/* Can this page really make a spoken call? Needs speech recognition and a microphone it is allowed to open. */
+async function micCheck(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR)return{ok:false,why:'this browser cannot turn speech into text'};
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)return{ok:false,why:'this page cannot reach a microphone'};
+  try{
+    const st=await Promise.race([navigator.mediaDevices.getUserMedia({audio:true}),sleep(15000).then(()=>{throw new Error('timeout')})]);
+    st.getTracks().forEach(t=>t.stop());return{ok:true};
+  }catch(e){return{ok:false,why:'the microphone is blocked or missing here'}}
+}
+function bounceHome(why){stopRing();S.call=null;toast(`The call could not connect: ${why}. Taking you home. Try Chat to practise by typing.`);go('home')}
+
+/* mode: 'chat' (typed) or 'call' (spoken) */
+async function startConvo(id,mode){
+  if(!SAMPLE){if(mode==='call'){bounceHome('Claude is not available in this view')}else toast('Chat needs Claude, which is not available in this view.');return}
+  const sc=SCEN.find(s=>s.id===id),t0=Date.now();
+  const opener=mode==='chat'?'The learner opened the chat. Start it: greet them in character.':'The phone rang and the learner answered. Start the call: greet them in character.';
+  const c=S.call={mode,phase:'ring',sc,msgs:[],busy:true,draft:'',hint:'',showHint:false,showEn:true,auto:true,start:0,err:'',typed:false,listening:false,lang:0,
+    turns:[{role:'user',content:rules(sc,mode)+'\n\n'+opener+' Set fb.status to "none" and the other fb fields to empty strings.'}]};
+  S.callErr='';render();
+  if(mode==='call'){
+    ringOnce();ringI=setInterval(ringOnce,2200);
+    const m=await micCheck();
+    if(S.call!==c)return;
+    await sleep(Math.max(0,2300-(Date.now()-t0)));            // let it ring at least once
+    if(S.call!==c)return;
+    if(!m.ok){bounceHome(m.why);return}
+  }
+  try{
+    const r=await SAMPLE.json(c.turns,{cache:false});
+    if(S.call!==c||c.phase!=='ring')return;
+    stopRing();c.turns.push({role:'assistant',content:JSON.stringify(r)});
+    c.msgs.push(them(r));c.hint=String(r.hint||'');c.phase='live';c.busy=false;c.start=Date.now();c.scroll=true;c.focus=mode==='chat';
+    startTimer();render();autoSay(r.yo);
+  }catch(e){
+    if(S.call!==c)return;
+    stopRing();S.call=null;S.callErr=sampleErr(e);render();
+  }
+}
+
+/* Spoken turn: listen once, then send what was heard as the learner's line. */
+const CLANGS=['yo-NG','yo'];
+function talk(){
+  const c=S.call;if(!c||c.mode!=='call'||c.busy||c.listening||c.phase!=='live')return;
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){c.err='Speech recognition is not available.';render();return}
+  try{speechSynthesis.cancel()}catch(e){}
+  c.listening=true;c.err='';c.heard='';render();
+  let done=false;const fin=r=>{if(done)return;done=true;c.listening=false;
+    if(S.call!==c)return;
+    if(r.text){c.draft=r.text;render();sendMsg();return}
+    if(r.err==='language-not-supported'&&c.lang<CLANGS.length-1){c.lang++;render();talk();return}
+    c.err=r.err==='no-speech'||!r.err?'I did not hear anything. Tap the microphone and try again.':r.err==='not-allowed'||r.err==='service-not-allowed'?'The microphone is blocked. Use “Type instead”, or end the call.':'Speech recognition had a problem ('+r.err+'). Try again, or use “Type instead”.';
+    render()};
+  try{
+    const rec=new SR();rec.lang=CLANGS[c.lang]||'yo-NG';rec.interimResults=false;rec.maxAlternatives=1;rec.continuous=false;
+    rec.onresult=e=>fin({text:(e.results[0][0]&&e.results[0][0].transcript||'').trim()});
+    rec.onerror=e=>fin({err:e.error});rec.onend=()=>fin({});
+    rec.start();setTimeout(()=>{if(!done)try{rec.stop()}catch(e){}},9000);
+  }catch(e){fin({err:'start-failed'})}
+}
+async function sendMsg(){
+  const c=S.call;if(!c||c.busy||c.phase!=='live')return;
+  const text=(c.draft||'').trim();if(!text)return;
+  c.draft='';c.showHint=false;c.busy=true;c.err='';
+  const me={who:'me',text};c.msgs.push(me);c.turns.push({role:'user',content:'Learner: '+text});
+  c.scroll=true;c.focus=true;render();
+  try{
+    const r=await SAMPLE.json(c.turns,{cache:false});
+    if(S.call!==c||c.phase!=='live')return;
+    c.turns.push({role:'assistant',content:JSON.stringify(r)});
+    me.fb=normFb(r.fb);c.msgs.push(them(r));c.hint=String(r.hint||'');c.busy=false;c.scroll=true;c.focus=true;
+    render();autoSay(r.yo);
+  }catch(e){
+    if(S.call!==c||c.phase!=='live')return;
+    c.msgs.pop();c.turns.pop();c.draft=text;c.err=sampleErr(e);c.busy=false;c.focus=true;render();
+  }
+}
+function endCall(){
+  const c=S.call;if(!c||c.phase!=='live')return;
+  clearInterval(tmrI);try{speechSynthesis.cancel()}catch(e){}
+  c.dur=Date.now()-c.start;c.phase='rate';c.rating=null;c.rerr='';
+  if(!c.msgs.some(m=>m.who==='me')){c.empty=true;render();return}
+  render();rateCall(c);
+}
+async function rateCall(c){
+  try{
+    const r=await SAMPLE.json(ratePrompt(c),{cache:false});
+    if(S.call!==c)return;
+    c.rating=cleanRating(r);
+    if(!c.awarded){c.awarded=true;if(c.mode==='chat')P.chats=(P.chats||0)+1;else P.calls=(P.calls||0)+1;addXP(20)}
+  }catch(e){if(S.call!==c)return;c.rerr=sampleErr(e)}
+  render();
+}
+
+const stars=n=>`<div class="stars" role="img" aria-label="${n} out of 5 stars">${[1,2,3,4,5].map(i=>`<svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="12,2.5 15,9 22,9.8 16.8,14.5 18.3,21.5 12,18 5.7,21.5 7.2,14.5 2,9.8 9,9" fill="${i<=n?'var(--gold)':'none'}" stroke="${i<=n?'var(--gold)':'var(--line)'}" stroke-width="1.6" stroke-linejoin="round"/></svg>`).join('')}</div>`;
+function fbHtml(fb){
+  if(!fb||fb.status==='none')return '';
+  if(fb.status==='good')return `<div class="fbw"><div class="fb ok"><b>Looks right</b><span>${fb.better&&fb.better!==fb.said?`With marks: <span class="yo">${esc(fb.better)}</span>. `:''}${esc(fb.why)}</span></div></div>`;
+  if(fb.status==='english')return `<div class="fbw"><div class="fb tip"><b>In Yorùbá</b><span><span class="yo">${esc(fb.better)}</span> ${esc(fb.why)}</span></div></div>`;
+  return `<div class="fbw"><div class="fb no"><b>Try this instead</b><span><span class="said">${esc(fb.said)}</span> → <span class="yo">${esc(fb.better)}</span><br>${esc(fb.why)}</span></div></div>`;
+}
+const init=sc=>esc([...sc.name.replace(/^Ìyá /,'')][0]||'?');
+
+function convoView(mode){
+  const c=S.call&&S.call.mode===mode?S.call:null,chat=mode==='chat',w=chat?'chat':'call';
+  if(!c){
+    return `<div class="sec" style="padding-top:max(14px,env(safe-area-inset-top,0px))"><h2>${chat?'Chat':'Phone call'}</h2></div>
+    <div class="panel"><p style="margin:0">${chat?'Text with a Yorùbá speaker. Type in Yorùbá, English, or a mix. Every message you send gets a quick check with the fix, and when you finish you get a rating and what to work on.'
+      :'Ring a Yorùbá speaker and talk out loud. Your voice is turned into text by your browser, checked, and answered. When you hang up, you get a rating and what to work on.'}</p>
+      <p class="muted" style="margin:10px 0 0;font-size:.9rem">${chat?'':'Calls need a microphone and speech recognition. If this device or page cannot use them, the call fails and takes you back Home. '}The partner and the feedback come from Claude, which can make mistakes, especially with tone marks. Check anything important with a Yorùbá speaker.</p>
+      <div class="row" style="justify-content:flex-start"><button class="btn alt" data-act="tab" data-v="${chat?'call':'chat'}">${chat?'Try a phone call instead':'Prefer typing? Open Chat'}</button></div></div>
+    ${S.callErr?`<div class="fb no" style="margin-top:14px">${esc(S.callErr)}</div>`:''}
+    ${SAMPLE===null?`<div class="fb no" style="margin-top:14px">This needs Claude, which is not available where you opened this page.</div>`:''}
+    <div class="units" style="margin-top:14px">${SCEN.map(s=>`<button class="unit" data-act="startconvo" data-m="${mode}" data-id="${s.id}">
+      <span class="n">${ic(chat?'chat':'call')}</span>
+      <h3>${esc(s.title)}</h3><span class="yoname">${esc(s.name)} · ${{b:'Beginner',i:'Intermediate',a:'Advanced'}[s.lvl]}</span><span class="meta">${esc(s.topics)}</span></button>`).join('')}</div>`;
+  }
+  if(c.phase==='ring'){
+    return `<div class="callscr"><div class="av${chat?'':' ring'}">${init(c.sc)}</div><h2>${esc(c.sc.name)}</h2><div class="muted">${chat?'Opening chat…':'Calling…'}</div>
+      <div class="row"><button class="end" data-act="cancelcall">Cancel</button></div></div>`;
+  }
+  if(c.phase==='rate'){
+    const W=w[0].toUpperCase()+w.slice(1);
+    if(c.empty)return `<div class="panel cen"><h2>${W} ended</h2><p class="muted">You finished before saying anything, so there is nothing to rate yet.</p>
+      <div class="row"><button class="btn" data-act="callagain">Back</button></div></div>`;
+    if(c.rerr)return `<div class="panel cen"><h2>Could not score the ${w}</h2><p class="muted">${esc(c.rerr)}</p><div class="row"><button class="btn" data-act="rerate">Try again</button><button class="btn alt" data-act="callagain">Back</button></div></div>`;
+    if(!c.rating)return `<div class="panel cen"><h2>${W} ended</h2><p class="muted" style="margin:6px 0 0">Scoring… this can take up to a minute.</p></div>`;
+    const r=c.rating,fixes=c.msgs.filter(m=>m.who==='me'&&m.fb&&(m.fb.status==='fix'||m.fb.status==='english'));
+    return `<div class="panel cen"><div class="eyebrow muted">${W} with ${esc(c.sc.name)} · ${fmt(c.dur)}</div>
+      ${stars(r.stars)}<div class="big" style="font-family:var(--f-ui);font-weight:800">${r.score}<span class="muted" style="font-size:.4em;font-weight:600"> / 100</span></div>
+      <p style="margin:10px auto 0;max-width:46ch">${esc(r.summary)}</p>
+      ${r.did_well.length?`<div class="rsec"><div class="q-label">What went well</div><ul class="l">${r.did_well.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`:''}
+      ${r.work_on.length?`<div class="rsec"><div class="q-label">What to work on</div><ul class="l">${r.work_on.map(w=>`<li><b>${esc(w.point)}.</b> ${esc(w.tip)}</li>`).join('')}</ul></div>`:''}
+      ${fixes.length?`<div class="rsec"><div class="q-label">Fixes from this ${w}</div><ul class="l">${fixes.map(m=>`<li>${esc(m.text)} → <span class="yo">${esc(m.fb.better)}</span></li>`).join('')}</ul></div>`:''}
+      ${r.practice.length?`<div class="rsec"><div class="q-label">Words to practise</div><div class="chips">${r.practice.map(p=>`<span class="chip"><span class="yo">${esc(p.yo)}</span> · ${esc(p.en)}</span>`).join('')}</div></div>`:''}
+      <p class="fine" style="text-align:center">+20 XP. Ratings come from Claude and are a guide, not a grade.</p>
+      <div class="row"><button class="btn alt" data-act="callagain">Another ${w}</button><button class="btn" data-act="tab" data-v="courses">Courses</button></div></div>`;
+  }
+  const last=c.msgs[c.msgs.length-1],typing=chat||c.typed;
+  return `<div class="callhead"><div class="av sm">${init(c.sc)}</div>
+      <div class="who"><h2>${esc(c.sc.name)}</h2><div class="meta">${c.busy?'Typing…':chat?'Online':'On call'} · <span id="timer">${fmt(Date.now()-c.start)}</span></div></div>
+      <button class="end" data-act="endcall" aria-label="End ${w}">${chat?'Finish':'End call'}</button></div>
+    <div class="thread" aria-live="polite">${c.msgs.map(m=>m.who==='them'
+      ?`<div class="msg them"><div class="bub"><div class="cyo yo">${esc(m.yo)}</div>${c.showEn?`<div class="cen2">${esc(m.en)}</div>`:''}</div>${spkBtn(m.yo)}</div>`
+      :`<div class="msg me"><div class="bub">${esc(m.text)}</div></div>${m.fb?fbHtml(m.fb):(c===S.call&&c.busy&&m===last?'<div class="fbw meta">Checking…</div>':'')}`).join('')}</div>
+    <div class="dock">
+      ${c.err?`<div class="fb no" style="margin:0">${esc(c.err)}</div>`:''}
+      ${c.showHint&&c.hint?`<div class="note">Try saying: ${esc(c.hint)}</div>`:''}
+      ${typing?`<div class="keys" aria-label="Special letters">${['ẹ','ọ','ṣ','à','á','è','é','ì','í','ò','ó','ù','ú'].map(k=>`<button class="key" data-act="ins" data-c="${k}">${k}</button>`).join('')}</div>
+      <div class="say"><input id="say" type="text" autocomplete="off" autocapitalize="sentences" enterkeyhint="send" placeholder="Reply in Yorùbá or English" aria-label="Your reply"><button class="btn" data-act="send" ${c.busy?'disabled':''}>Send</button></div>`
+      :`<div style="text-align:center">${c.listening?`<div class="listening" role="status"><span></span><span></span><span></span></div><p class="meta" style="margin:6px 0 0">Listening… speak now</p>`:`<button class="btn mic" data-act="talk" ${c.busy?'disabled':''}>🎤 ${c.busy?'Wait for the reply…':'Tap to talk'}</button>`}</div>`}
+      <div class="tools"><button class="chip" data-act="hint">Hint</button><button class="chip" data-act="toggleen">English: ${c.showEn?'on':'off'}</button>${chat?'':`<button class="chip${c.typed?' on':''}" data-act="toggletyped">Type instead</button>`}${yoVoice()?`<button class="chip" data-act="toggleaud">Read aloud: ${c.auto?'on':'off'}</button>`:''}</div>
+    </div>`;
+}
+
+/* ---------- registration ---------- */
+VIEWS.call=()=>convoView('call');VIEWS.chat=()=>convoView('chat');
+ACT.startconvo=d=>startConvo(d.id,d.m);
+ACT.talk=()=>talk();
+ACT.toggletyped=()=>{if(S.call){S.call.typed=!S.call.typed;S.call.focus=true;render()}};
+ACT.cancelcall=()=>{stopRing();S.call=null;render()};
+ACT.send=()=>sendMsg();
+ACT.endcall=()=>endCall();
+ACT.rerate=()=>{if(S.call){S.call.rerr='';S.call.rating=null;render();rateCall(S.call)}};
+ACT.callagain=()=>{S.call=null;S.callErr='';render();window.scrollTo(0,0)};
+ACT.hint=()=>{if(S.call){S.call.showHint=!S.call.showHint;S.call.focus=true;render()}};
+ACT.toggleen=()=>{if(S.call){S.call.showEn=!S.call.showEn;S.call.focus=true;render()}};
+ACT.toggleaud=()=>{if(S.call){S.call.auto=!S.call.auto;S.call.focus=true;render()}};
+ACT.ins=d=>{const el=$('#say');if(!el)return;const s=el.selectionStart==null?el.value.length:el.selectionStart,e2=el.selectionEnd==null?s:el.selectionEnd;
+  el.setRangeText(d.c,s,e2,'end');if(S.call)S.call.draft=el.value;el.focus()};
+AFTER.chat=AFTER.call=()=>{
+  if(S.call&&S.call.phase==='live'){
+    const el=$('#say');
+    if(el){el.value=S.call.draft||'';if(S.call.focus){el.focus({preventScroll:true});S.call.focus=false}}
+    if(S.call.scroll){S.call.scroll=false;requestAnimationFrame(()=>window.scrollTo({top:document.body.scrollHeight}))}
+  }
+};
+document.addEventListener('input',e=>{if(e.target.id==='say'&&S.call)S.call.draft=e.target.value});
+document.addEventListener('keydown',e=>{if(e.target.id==='say'&&e.key==='Enter'&&!e.isComposing){e.preventDefault();sendMsg()}});
+
+/* ===== 07-words.js  Phrasebook (searchable, filter by course) and Culture page ===== */
+const HANDY=[
+ ['Ebi ń pa mí','I am hungry',''],['Òùngbẹ ń gbẹ mí','I am thirsty',''],['Oorun ń gbé mi','I am sleepy',''],['Inú mi dùn','I am happy','Literally “my inside is sweet.”'],
+ ['Mo gbọ́','I understand / I hear',''],['Mi ò gbọ́','I do not understand',''],['Mi ò mọ̀','I do not know',''],['Jọ̀wọ́, tún un sọ','Please say it again',''],
+ ['Ó dára','It is good / okay',''],['Ṣé o gbọ́ Yorùbá?','Do you understand Yorùbá?',''],['Mo fẹ́ràn èdè Yorùbá','I like the Yorùbá language','']
+].map(a=>({yo:a[0],en:a[1],note:a[2],unit:'handy'}));
+
+function wordList(){
+  const W=S.ws,pool=uniqBy([...ALL,...HANDY],i=>i.yo+'|'+i.en).filter(i=>{
+    if(W.cat==='all')return true;if(W.cat==='handy')return i.unit==='handy';
+    const u=unit(i.unit);return u&&u.course===+W.cat});
+  const q=wnorm(W.q.trim()),out=q?pool.filter(i=>wnorm(i.yo).includes(q)||wnorm(i.en).includes(q)):pool;
+  return out.length?out.slice(0,200).map(i=>`<div class="wrow"><div style="min-width:0"><div class="yo wy">${esc(i.yo)}</div><div class="muted">${esc(i.en)}</div></div>${spkBtn(i.yo)}</div>`).join('')+(out.length>200?'<p class="fine">Showing the first 200. Type to narrow it down.</p>':'')
+    :'<p class="muted">No match. Try another spelling or an English word.</p>';
+}
+function words(){
+  const W=S.ws||(S.ws={q:'',cat:'all'});
+  const total=uniqBy([...ALL,...HANDY],i=>i.yo+'|'+i.en).length;
+  return `<div class="sec" style="padding-top:max(14px,env(safe-area-inset-top,0px))"><h2>Phrasebook</h2><span class="meta">${total} entries</span></div>
+  <input id="wsq" class="search" type="search" autocomplete="off" value="${esc(W.q)}" placeholder="Search Yorùbá or English" aria-label="Search the phrasebook">
+  <label class="meta" for="wscat" style="display:block;margin:12px 0 6px">Filter by course</label>
+  <select id="wscat" class="search">${[['all','All courses'],...COURSES.filter(c=>c.units.length).map(c=>[String(c.id),`${c.id}. ${c.title}`]),['handy','Handy phrases']].map(c=>`<option value="${c[0]}"${W.cat===c[0]?' selected':''}>${esc(c[1])}</option>`).join('')}</select>
+  <div id="wsl" class="panel" style="padding:4px 16px;margin-top:14px">${wordList()}</div>
+  <p class="fine">You can search without tone marks: typing “ebi” finds “ẹbí.” Spelling and tone marks differ a little between sources and regions.</p>`;
+}
+document.addEventListener('input',e=>{if(e.target.id==='wsq'&&S.ws){S.ws.q=e.target.value;const l=$('#wsl');if(l)l.innerHTML=wordList()}});
+document.addEventListener('change',e=>{if(e.target.id==='wscat'&&S.ws){S.ws.cat=e.target.value;const l=$('#wsl');if(l)l.innerHTML=wordList()}});
+
+function culture(){
+  return `<div class="sec"><h2>Culture</h2></div>
+  <div class="cult">
+  <div class="panel"><h3>Where Yorùbá is spoken</h3><p>Over 40 million people speak Yorùbá, mainly in southwestern Nigeria, and also in Benin, Togo and communities around the world.</p></div>
+  <div class="panel"><h3>Respect starts with the greeting</h3><p>Greetings matter a lot. Younger people greet elders first, and the respectful “Ẹ” at the start of phrases like <span class="yo">Ẹ káàárọ̀</span> is used with elders and with groups. Traditionally, girls kneel and boys lie down briefly when greeting an elder, though customs differ between families and places.</p></div>
+  <div class="panel"><h3>Ọmọlúàbí</h3><p>A person of good character is called an <span class="yo">ọmọlúàbí</span>. Being kind, honest and respectful is seen as the heart of a person, and it shows up in many Yorùbá sayings.</p></div>
+  <div class="panel"><h3>Names carry meaning</h3><p>Many Yorùbá names are short sentences. <span class="yo">Ayọ̀</span> means joy, and <span class="yo">Túndé</span> means “has come again.” In Chat and Call, you meet people with both names.</p></div>
+  <div class="panel"><h3>Two proverbs</h3>
+    <div class="prov">Ìwà lẹ̀wà ọmọ ènìyàn</div><p class="muted" style="margin-top:0">Character is the beauty of a person.</p>
+    <div class="prov" style="margin-top:14px">Bí ọmọdé bá mọ ọwọ́ wẹ̀, yóò bá àgbà jẹun</div><p class="muted" style="margin-top:0">If a child knows how to wash their hands, they will eat with elders.</p>
+    <p class="fine">Proverbs are written a little differently from place to place. Ask a Yorùbá speaker how they say them.</p></div>
+  <div class="panel"><h3>How it is written</h3><p>Yorùbá was once written in Arabic script. A Latin-based alphabet with tone marks and dotted letters was standardized in the early 1900s. Tone marks matter because they change a word’s meaning, which is why the Tone Lab exists.</p></div>
+  </div>
+  <p class="fine">Sources: <a href="https://preply.com/en/blog/yoruba-alphabet-comprehensive-guide" target="_blank" rel="noopener">Preply: Yoruba alphabet guide</a>, <a href="https://www.yorubalibrary.com/forum/articles/2025/02/introduction_to_yoruba_numbers.html" target="_blank" rel="noopener">Yoruba Library</a>. Cultural customs vary, so treat these as starting points.</p>`;
+}
+VIEWS.words=words;VIEWS.culture=culture;
+
+/* ===== 08-audiolab.js  Audio Lab (Course 12)
+   - Import real recordings (for example from OpenSLR SLR86) into this browser's IndexedDB.
+   - Drills: hear a clip and pick its transcript, or hear it and type it.
+   - Word listening with the device's Yorùbá voice, when the device has one.
+   Clips never leave the browser. WebAudio decodes them, so no hosting or media permissions are needed. ===== */
+
+const AUD={db:null,clips:[],cache:new Map(),src:null,busy:false,msg:'',err:'',loaded:false,confirmDel:false};
+const MAX_CLIPS=2000,MAX_SEC=25;
+
+
+/* ---------- IndexedDB (one store: clips {id,name,text,data,dur,size}) ---------- */
+function idb(){return new Promise((res,rej)=>{
+  if(AUD.db)return res(AUD.db);let r;
+  try{r=indexedDB.open('ede-mi-audio',1)}catch(e){return rej(e)}
+  r.onupgradeneeded=()=>{r.result.createObjectStore('clips',{keyPath:'id'})};
+  r.onsuccess=()=>{AUD.db=r.result;res(AUD.db)};r.onerror=()=>rej(r.error)})}
+const idbTx=(mode,fn)=>idb().then(db=>new Promise((res,rej)=>{
+  const t=db.transaction('clips',mode),out=fn(t.objectStore('clips'));
+  t.oncomplete=()=>res(out&&'result' in out?out.result:undefined);t.onerror=t.onabort=()=>rej(t.error)}));
+async function loadClips(){
+  try{AUD.clips=(await idbTx('readonly',st=>st.getAll()))||[];AUD.err=''}
+  catch(e){AUD.clips=[];AUD.err='This browser would not let the page keep audio files, so importing is off here.'}
+  AUD.loaded=true;if(S.view==='audio')render();
+}
+const labeled=()=>AUD.clips.filter(c=>c.text&&c.text.trim());
+const totalMB=()=>AUD.clips.reduce((a,c)=>a+(c.size||0),0)/1048576;
+
+/* ---------- transcript parsing ---------- */
+const stemOf=n=>String(n).split(/[\\/]/).pop().replace(/\.[^.]+$/,'').trim().toLowerCase();
+/* Accepts clips.json ([{file,text}] or {stem:text}) and OpenSLR tab-separated line_index files (first column = id, last = sentence). */
+function parseTranscripts(txt,name){
+  const m=new Map(),clean=t=>String(t||'').normalize('NFC').replace(/\s+/g,' ').trim();
+  if(/\.json$/i.test(name)){
+    let j;try{j=JSON.parse(txt)}catch(e){return m}
+    if(Array.isArray(j))j.forEach(o=>{if(o&&typeof o==='object'){const f=o.file||o.id||o.name,t=o.text||o.transcript||o.sentence;if(f&&t)m.set(stemOf(f),clean(t))}});
+    else if(j&&typeof j==='object')Object.keys(j).forEach(k=>{if(typeof j[k]==='string')m.set(stemOf(k),clean(j[k]))});
+    return m;
+  }
+  txt.split(/\r?\n/).forEach(line=>{const c=line.split('\t');if(c.length>=2){const t=clean(c[c.length-1]);if(c[0].trim()&&t)m.set(stemOf(c[0]),t)}});
+  return m;
+}
+const isAudioFile=f=>/^audio\//.test(f.type)||/\.(wav|mp3|ogg|oga|flac|m4a|aac|webm)$/i.test(f.name);
+const isTextFile=f=>/\.(json|tsv|txt|csv)$/i.test(f.name);
+
+/* ---------- importing ---------- */
+async function importFiles(files){
+  const list=[...files];if(!list.length||AUD.busy)return;
+  AUD.busy=true;AUD.err='';AUD.msg='Reading transcripts…';render();
+  let added=0,skipped=0,attached=0;
+  try{
+    const tr=new Map();
+    for(const f of list.filter(isTextFile)){parseTranscripts(await f.text(),f.name).forEach((v,k)=>tr.set(k,v))}
+    /* A transcript file on its own adds sentences to clips already imported. */
+    if(tr.size){for(const c of AUD.clips){if(!c.text&&tr.has(c.id)){c.text=tr.get(c.id);await idbTx('readwrite',st=>st.put(c));attached++}}}
+    const audio=list.filter(isAudioFile);
+    for(let i=0;i<audio.length;i++){
+      if(AUD.clips.length>=MAX_CLIPS){skipped+=audio.length-i;break}
+      const f=audio[i];AUD.msg=`Adding clip ${i+1} of ${audio.length}…`;render();
+      try{
+        const data=await f.arrayBuffer(),buf=await ctx().decodeAudioData(data.slice(0));
+        if(buf.duration>MAX_SEC){skipped++;continue}
+        const id=stemOf(f.name),clip={id,name:f.name,text:tr.get(id)||'',data,dur:buf.duration,size:data.byteLength};
+        await idbTx('readwrite',st=>st.put(clip));
+        const k=AUD.clips.findIndex(c=>c.id===id);if(k>=0)AUD.clips[k]=clip;else AUD.clips.push(clip);
+        AUD.cache.set(id,buf);added++;
+      }catch(e){skipped++}
+    }
+    AUD.msg=`Added ${added} clip${added===1?'':'s'}${attached?`, attached ${attached} transcript${attached===1?'':'s'}`:''}${skipped?`, skipped ${skipped} (too long, unreadable or over the ${MAX_CLIPS}-clip limit)`:''}.${tr.size===0&&audio.length?' No transcript file was included, so these clips cannot be used in drills until you add one.':''}`;
+  }catch(e){AUD.err='Something went wrong reading those files. Try fewer files at a time.';AUD.msg=''}
+  AUD.busy=false;render();
+}
+async function clearClips(){
+  try{await idbTx('readwrite',st=>st.clear())}catch(e){}
+  AUD.clips=[];AUD.cache.clear();AUD.msg='All clips removed.';AUD.confirmDel=false;S.au=null;render();
+}
+
+/* ---------- playback ---------- */
+async function bufFor(c){
+  if(AUD.cache.has(c.id))return AUD.cache.get(c.id);
+  const b=await ctx().decodeAudioData(c.data.slice(0));AUD.cache.set(c.id,b);
+  if(AUD.cache.size>40)AUD.cache.delete(AUD.cache.keys().next().value);return b;
+}
+async function playClip(id,rate){
+  const c=AUD.clips.find(x=>x.id===id);if(!c)return;
+  try{
+    const b=await bufFor(c),cx=ctx();
+    try{if(AUD.src)AUD.src.stop()}catch(e){}
+    const s=cx.createBufferSource();s.buffer=b;s.playbackRate.value=rate||1;s.connect(cx.destination);s.start();AUD.src=s;
+  }catch(e){toast('That clip could not be played.')}
+}
+const clipBtn=(id,label)=>`<button class="btn alt" data-act="playclip" data-id="${esc(id)}">▶ ${label||'Play'}</button>`;
+
+/* ---------- clip drills ---------- */
+function auNew(mode){
+  const pool=labeled();
+  if(pool.length<4){toast('Import at least 4 clips with transcripts first.');return}
+  S.au={mode,n:0,rounds:5,score:0,q:null,pick:null,typed:'',res:null,done:false,slow:false};auNext();
+}
+function auNext(){
+  const A=S.au,pool=labeled();
+  const c=pool[Math.floor(Math.random()*pool.length)];
+  const others=shuf(uniqBy(pool.filter(x=>x.text!==c.text),x=>x.text)).slice(0,3).map(x=>x.text);
+  A.q={c,opts:shuf([c.text,...others])};A.pick=null;A.typed='';A.res=null;
+  playClip(c.id,A.slow?.8:1);
+}
+/* Compare typed words to the sentence. Exact match scores 1, right letters but wrong marks scores 0.5. */
+function dictScore(target,typed){
+  const strip=w=>w.replace(/[.,!?;:“”"()]/g,''),T=target.split(/\s+/).map(strip).filter(Boolean),U=typed.split(/\s+/).map(strip).filter(Boolean);
+  const used=new Array(U.length).fill(false),marks=[];let pts=0;
+  const out=T.map(w=>{
+    let k=U.findIndex((u,i)=>!used[i]&&u.normalize('NFC')===w.normalize('NFC'));
+    if(k>=0){used[k]=true;pts+=1;return{w,st:'ok'}}
+    k=U.findIndex((u,i)=>!used[i]&&wnorm(u)===wnorm(w));
+    if(k>=0){used[k]=true;pts+=.5;return{w,st:'marks'}}
+    return{w,st:'miss'}});
+  return{pct:T.length?Math.round(pts/T.length*100):0,words:out};
+}
+function auFinish(){
+  const A=S.au;A.done=true;const xp=8+Math.round(A.score/A.rounds*8);
+  P.audioDone++;addXP(xp);A.xp=xp;sfx('win');render();
+}
+
+function clipPanel(){
+  const A=S.au,n=AUD.clips.length,lab=labeled().length;
+  if(AUD.err&&!n)return `<div class="fb no" style="margin-top:0">${esc(AUD.err)}</div>`;
+  if(!n)return `<p style="margin:0">No recordings have been added yet. Real voices are the best way to train your ear, and you can add your own set from OpenSLR (steps below). Everything stays in this browser.</p>`;
+  const credit=`<p class="fine" style="margin-top:14px">Recordings: Open-source Yorùbá speech corpus (OpenSLR SLR86), Copyright Google, Inc., licensed CC BY-SA 4.0 (<a href="https://creativecommons.org/licenses/by-sa/4.0/" target="_blank" rel="noopener">license</a>). Gutkin, Demirşahin, Kjartansson, Rivera and Túbọ̀sún, “Developing an Open-Source Corpus of Yoruba Speech,” Interspeech 2020, pp. 404–408. Clips are used as imported, without changes other than your selection. If you imported other recordings, credit their source.</p>`;
+  let drill='';
+  if(!A){
+    drill=lab>=4?`<div class="row" style="justify-content:flex-start"><button class="btn" data-act="aunew" data-m="pick">Hear and pick</button><button class="btn alt" data-act="aunew" data-m="type">Hear and type</button></div>`
+      :`<div class="note">${lab} of your ${n} clips ha${lab===1?'s':'ve'} a transcript. Add at least 4 with transcripts to unlock the drills. Import the transcript file (clips.json or line_index tsv) now to attach sentences to clips already added.</div>`;
+  }else if(A.done){
+    drill=`<div class="cen"><div class="big yo" style="margin:6px 0">Ó dára!</div><p class="muted" style="margin:0">Round done. ${A.mode==='pick'?`${A.score} of ${A.rounds} right.`:`Average accuracy ${Math.round(A.score/A.rounds*100)}%.`} +${A.xp} XP.</p>
+      <div class="row"><button class="btn" data-act="aunew" data-m="${A.mode}">Another round</button><button class="btn alt" data-act="auquit">Done</button></div></div>`;
+  }else{
+    const q=A.q,head=`<div class="row" style="margin:0 0 12px;justify-content:space-between;align-items:center"><span class="meta">Clip ${A.n+1} of ${A.rounds}</span><span class="row" style="margin:0">${clipBtn(q.c.id,'Play again')}<button class="chip${A.slow?' on':''}" data-act="auslow">Slow</button></span></div>`;
+    if(A.mode==='pick'){
+      drill=head+`<div class="q-label" style="margin-top:0">What did you hear?</div><div class="opts" style="margin-top:8px">${q.opts.map(o=>{let cl='opt yo';if(A.pick!==null){if(o===q.c.text)cl+=' right';else if(o===A.pick)cl+=' wrong'}
+        return `<button class="${cl}" data-act="aupick" data-v="${esc(o)}" ${A.pick!==null?'disabled':''}>${esc(o)}</button>`}).join('')}</div>
+        ${A.pick!==null?`<div class="row"><button class="btn" data-act="aunext">${A.n+1>=A.rounds?'Finish':'Next clip'}</button></div>`:''}`;
+    }else{
+      drill=head+`<div class="q-label" style="margin-top:0">Type what you heard</div>
+        <div class="say"><input id="audtype" class="search" type="text" autocomplete="off" autocapitalize="off" placeholder="Type the sentence (marks help, but are not required)" aria-label="Type what you heard" ${A.res?'disabled':''}><button class="btn" data-act="aucheck" ${A.res?'disabled':''}>Check</button></div>
+        <div class="keys" style="margin-top:8px" aria-label="Special letters">${['ẹ','ọ','ṣ','à','á','è','é','ì','í','ò','ó','ù','ú'].map(k=>`<button class="key" data-act="auins" data-c="${k}">${k}</button>`).join('')}</div>
+        ${A.res?`<div class="fb ${A.res.pct>=80?'ok':'no'}"><b>${A.res.pct}% matched</b><span>${A.res.words.map(w=>`<span class="yo" style="margin-right:6px;${w.st==='ok'?'color:var(--good)':w.st==='marks'?'color:var(--gold)':'color:var(--bad);text-decoration:underline'}">${esc(w.w)}</span>`).join('')}<br><span class="meta">Green is exact, gold has the right letters but different marks, red is missed or different.</span></span></div>
+        <div class="row"><button class="btn" data-act="aunext">${A.n+1>=A.rounds?'Finish':'Next clip'}</button></div>`:''}`;
+    }
+  }
+  return `<div class="meta" style="margin-bottom:10px">${n} clip${n===1?'':'s'} · ${lab} with transcripts · ${totalMB().toFixed(1)} MB in this browser</div>${drill}${credit}`;
+}
+
+/* ---------- word listening (device voice) ---------- */
+function lsNew(){
+  const pool=ALL.filter(i=>!unit(i.unit).build&&i.yo.split(' ').length<=3);
+  const it=pool[Math.floor(Math.random()*pool.length)];
+  const others=shuf(uniqBy(pool.filter(x=>x.en!==it.en),x=>x.en)).slice(0,3).map(x=>x.en);
+  S.ls.q={it,opts:shuf([it.en,...others])};S.ls.pick=null;speak(it.yo);
+}
+function wordListen(){
+  const v=yoVoice(),L=S.ls||(S.ls={n:0,score:0,q:null,pick:null});
+  if(!v)return `<div class="note">This device has no Yorùbá voice installed, so word-by-word listening is not available here. Try a phone or computer that has one (look in its text-to-speech or language settings). Imported recordings, the Tone Lab and Tone Tower work on any device.</div>`;
+  if(!L.q)return `<div class="row" style="margin-top:0;justify-content:flex-start"><button class="btn" data-act="lsnew">Play a word</button></div><p class="meta" style="margin:10px 0 0">Using the voice on this device: ${esc(v.name)}.</p>`;
+  const q=L.q;
+  return `<div class="row" style="margin:0 0 12px;justify-content:flex-start;align-items:center">${spkBtn(q.it.yo)}<span class="muted">Tap to hear it again · ${L.score} of ${L.n} right</span></div>
+  <div class="opts" style="margin-top:0">${q.opts.map(o=>{let cl='opt';if(L.pick){if(o===q.it.en)cl+=' right';else if(o===L.pick)cl+=' wrong'}
+    return `<button class="${cl}" data-act="lspick" data-v="${esc(o)}" ${L.pick?'disabled':''}>${esc(o)}</button>`}).join('')}</div>
+  ${L.pick?`<div class="fb ${L.pick===q.it.en?'ok':'no'}"><b>${L.pick===q.it.en?'Correct':'Not quite'}</b><span><span class="yo">${esc(q.it.yo)}</span> means “${esc(q.it.en)}”.</span></div><div class="row"><button class="btn" data-act="lsnew">Next word</button></div>`:''}`;
+}
+
+/* ---------- page ---------- */
+function audio(){
+  const n=AUD.clips.length;
+  return `<div class="sec" style="padding-top:max(14px,env(safe-area-inset-top,0px))"><h2>Audio Lab</h2><span class="meta">Course 12 · ${P.audioDone} round${P.audioDone===1?'':'s'} done</span></div>
+  <div class="panel" style="margin-top:0"><h3>Real recordings</h3><div style="margin-top:10px">${clipPanel()}</div></div>
+  <div class="panel"><h3>Add recordings</h3>
+    <p class="muted" style="margin:8px 0 12px">Choose audio files (wav, mp3, ogg) and a transcript file together. Transcripts can be a clips.json file or an OpenSLR <span class="yo" style="font-weight:600">line_index</span> tsv. Up to ${MAX_CLIPS} clips of ${MAX_SEC} seconds or less.</p>
+    ${AUD.err&&n?`<div class="fb no" style="margin:0 0 10px">${esc(AUD.err)}</div>`:''}
+    <label class="btn filebtn${AUD.busy?' disabled':''}" for="audfiles">${AUD.busy?esc(AUD.msg||'Working…'):'Choose files'}</label>
+    <input id="audfiles" type="file" multiple accept="audio/*,.wav,.mp3,.ogg,.flac,.m4a,.json,.tsv,.txt,.csv" ${AUD.busy?'disabled':''} hidden>
+    ${AUD.msg&&!AUD.busy?`<p class="meta" style="margin:12px 0 0" role="status">${esc(AUD.msg)}</p>`:''}
+    ${n?(AUD.confirmDel?`<div class="row" style="justify-content:flex-start"><span class="meta">Remove all ${n} clips from this browser?</span><button class="btn alt" data-act="audelyes">Yes, remove</button><button class="btn alt" data-act="audelno">Keep</button></div>`:`<div class="row" style="justify-content:flex-start"><button class="chip" data-act="audelask">Remove all clips</button></div>`):''}</div>
+  <div class="panel"><h3>Word listening</h3><p class="muted" style="margin:8px 0 12px">Hear a word read by your device, then pick its meaning.</p>${wordListen()}</div>
+  <div class="panel cult"><h3>More ear training</h3><p>Pitch practice works on every device.</p>
+    <div class="row" style="justify-content:flex-start"><button class="btn alt" data-act="tab" data-v="tones">Tone Lab</button><button class="btn alt" data-act="tab" data-v="tower">Tone Tower game</button></div></div>
+  <details class="panel cult"><summary><b>How to get OpenSLR Yorùbá clips</b></summary>
+    <ol class="l"><li>Download one or both zips and the line_index files from <a href="https://www.openslr.org/86/" target="_blank" rel="noopener">openslr.org/86</a> (about 450 MB each).</li>
+    <li>On your computer, run the helper script that comes with this project: <code>python3 tools/prepare_openslr.py --zip yo_ng_female.zip --tsv line_index_female.tsv --out clips --count 150</code></li>
+    <li>It picks short, clean sentences and writes a <b>clips</b> folder with the audio files and <b>clips.json</b>.</li>
+    <li>Come back here, tap Choose files, and select everything in that folder.</li></ol>
+    <p class="muted">The helper adds the license credit for you. Keep the credit when you share clips.</p></details>`;
+}
+
+ACT.audioopen=()=>go('audio');
+ACT.playclip=d=>playClip(d.id,S.au&&S.au.slow?.8:1);
+ACT.aunew=d=>{auNew(d.m);render()};
+ACT.auquit=()=>{S.au=null;render()};
+ACT.auslow=()=>{if(S.au){S.au.slow=!S.au.slow;render()}};
+ACT.aupick=d=>{const A=S.au;if(!A||A.pick!==null)return;A.pick=d.v;const ok=d.v===A.q.c.text;if(ok)A.score++;sfx(ok?'ok':'bad');render()};
+ACT.aucheck=()=>{const A=S.au,el=$('#audtype');if(!A||A.res||!el)return;A.typed=el.value;A.res=dictScore(A.q.c.text,A.typed);A.score+=A.res.pct/100;sfx(A.res.pct>=80?'ok':'bad');render()};
+ACT.aunext=()=>{const A=S.au;if(!A)return;A.n++;if(A.n>=A.rounds)auFinish();else{auNext();render()}};
+ACT.auins=d=>{const el=$('#audtype');if(!el)return;const s=el.selectionStart==null?el.value.length:el.selectionStart,e2=el.selectionEnd==null?s:el.selectionEnd;el.setRangeText(d.c,s,e2,'end');el.focus()};
+ACT.audelask=()=>{AUD.confirmDel=true;render()};
+ACT.audelno=()=>{AUD.confirmDel=false;render()};
+ACT.audelyes=()=>{clearClips()};
+ACT.lsnew=()=>{S.ls=S.ls||{n:0,score:0,q:null,pick:null};lsNew();render()};
+ACT.lspick=d=>{const L=S.ls;if(!L||!L.q||L.pick)return;L.pick=d.v;L.n++;const ok=d.v===L.q.it.en;if(ok)L.score++;sfx(ok?'ok':'bad');
+  if(L.n%5===0){P.audioDone++;addXP(6)}render()};
+document.addEventListener('change',e=>{if(e.target.id==='audfiles')importFiles(e.target.files)});
+VIEWS.audio=audio;
+AFTER.audio=()=>{const el=$('#audtype');if(el&&S.au)el.value=S.au.typed||'';if(!AUD.loaded){AUD.loaded=true;loadClips()}};
+
+/* ===== 09-games-common.js  Game Hub, icons, tower, leaderboard (simulated rivals), shared results screen.
+   Each game lives in its own file (10-… to 14-…) and plugs in with VIEWS[id], ACT[...] and STOPS. ===== */
+
+/* ---------- the eight games ---------- */
+const GAMES=[
+ {id:'match',t:'Match Game',yo:'Ìdàpọ̀',d:'Flip cards and pair each Yorùbá word with its meaning.',lb:'match'},
+ {id:'tower',t:'Tone Tower',yo:'Ilé gíga',d:'Hear a pitch pattern, pick the matching word, and stack tower pieces.',lb:'tone'},
+ {id:'runner',t:'Cowrie Run',yo:'Sáré',d:'Dash through the market, dodge hurdles, grab cowries and build your tower.',lb:'runner'},
+ {id:'scramble',t:'Word Scramble',yo:'Àkójọ lẹ́tà',d:'Put the jumbled letters back in order, tone marks and all.',lb:'scramble'},
+ {id:'speed',t:'Speed Quiz',yo:'Yára',d:'Sixty seconds. Answer fast, build a combo, keep your lives.',lb:'speed'},
+ {id:'say',t:'Say It',yo:'Sọ ọ́',d:'Voice game: a word appears, you say it out loud for points and tower pieces.',lb:'say'},
+ {id:'echo',t:'Echo',yo:'Àwòdì ohùn',d:'Voice game: memorize a phrase for 3 seconds, then say it from memory.',lb:'echo'},
+ {id:'recall',t:'Recall',yo:'Ranti',d:'Voice game: see the English, say the Yorùbá out loud.',lb:'recall'}];
+const LB=[['runner','Cowrie Run'],['tone','Tone Tower'],['match','Match Game'],['scramble','Word Scramble'],['speed','Speed Quiz'],['say','Say It'],['echo','Echo'],['recall','Recall'],['tower','Tower height']];
+
+/* Clean custom icons, 64px, drawn with theme colors. */
+const GI={
+ match:`<rect x="6" y="14" width="24" height="34" rx="5" fill="var(--tint)" stroke="currentColor" stroke-width="3"/><rect x="34" y="18" width="24" height="34" rx="5" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M18 26v10M13 31h10" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><path d="M46 29l-4 6h8l-4 6" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+ tower:`<rect x="20" y="46" width="24" height="10" rx="2" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><rect x="23" y="35" width="18" height="10" rx="2" fill="var(--tint)" stroke="currentColor" stroke-width="3"/><rect x="26" y="24" width="12" height="10" rx="2" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M32 12l4 6h-8z" fill="currentColor"/><path d="M8 28q-3 4 0 8M13 25q-5 7 0 14M56 28q3 4 0 8M51 25q5 7 0 14" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>`,
+ runner:`<path d="M10 56L26 8h12l16 48" fill="var(--tint)" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/><path d="M32 12v8M32 28v8M32 44v8" stroke="currentColor" stroke-width="3" stroke-linecap="round"/><circle cx="32" cy="22" r="5" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M32 27v10l-6 8M32 33l7-4M32 37l7 8" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>`,
+ scramble:`<rect x="6" y="22" width="22" height="22" rx="5" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><rect x="36" y="22" width="22" height="22" rx="5" fill="var(--tint)" stroke="currentColor" stroke-width="3"/><path d="M17 38v-9l-3 4M17 29l3 4" fill="none" stroke="currentColor" stroke-width="0"/><text x="17" y="39" text-anchor="middle" font-size="16" font-weight="800" font-family="serif" fill="currentColor">Ẹ</text><text x="47" y="39" text-anchor="middle" font-size="16" font-weight="800" font-family="serif" fill="currentColor">Ọ</text><path d="M14 14q18-10 36 0M46 10l4 4-5 3M14 52q18 10 36 0M18 56l-4-4 5-3" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`,
+ speed:`<circle cx="32" cy="36" r="20" fill="var(--tint)" stroke="currentColor" stroke-width="3"/><path d="M32 36V22M26 8h12M32 8v8" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><path d="M35 26l-8 12h7l-3 10 11-15h-8z" fill="var(--gold)" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>`,
+ say:`<rect x="23" y="6" width="18" height="30" rx="9" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M14 30a18 18 0 0 0 36 0M32 48v10M22 58h20" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`,
+ echo:`<rect x="8" y="22" width="14" height="22" rx="7" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M30 24q6 8 0 16M38 18q11 14 0 28M46 12q16 20 0 40" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`,
+ recall:`<circle cx="32" cy="26" r="18" fill="var(--tint)" stroke="currentColor" stroke-width="3"/><path d="M26 22a6 6 0 1 1 9 5c-2 1-3 2-3 5" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/><circle cx="32" cy="38" r="2" fill="currentColor"/><rect x="26" y="48" width="12" height="10" rx="5" fill="var(--gold)" stroke="currentColor" stroke-width="3"/>`,
+ trophy:`<path d="M20 8h24v18a12 12 0 0 1-24 0z" fill="var(--gold)" stroke="currentColor" stroke-width="3"/><path d="M20 14H10c0 10 4 14 10 14M44 14h10c0 10-4 14-10 14" fill="none" stroke="currentColor" stroke-width="3"/><path d="M32 38v10M22 56h20M26 48h12" stroke="currentColor" stroke-width="3.5" stroke-linecap="round"/>`};
+const gicon=(id,sz)=>`<svg viewBox="0 0 64 64" width="${sz||56}" height="${sz||56}" aria-hidden="true">${GI[id]}</svg>`;
+
+/* ---------- tower ---------- */
+const TOWER_LV=[['Foundation',0],['Hut',5],['Compound',15],['Watchtower',30],['Palace',60],['Citadel',100]];
+const towerLevel=n=>{let k=0;TOWER_LV.forEach((l,i)=>{if(n>=l[1])k=i});return TOWER_LV[k][0]};
+/* Draws up to 30 stacked blocks; `extra` shows this round's new pieces in gold. */
+function towerSvg(n,extra,h){
+  const total=n+(extra||0),show=Math.min(total,30),cols=['var(--indigo)','var(--tint)','var(--hero)'],bh=Math.max(5,Math.min(12,220/Math.max(show,1)));
+  let out='';for(let i=0;i<show;i++){const isNew=i>=show-Math.min(extra||0,show),w=84-Math.min(i,24)*1.6,y=236-(i+1)*bh;
+    out+=`<rect x="${100-w/2}" y="${y}" width="${w}" height="${bh-1.5}" rx="2" fill="${isNew?'var(--gold)':cols[i%3]}" stroke="var(--fg)" stroke-width="1" opacity="${isNew?1:.95}"/>`}
+  if(total>0)out+=`<path d="M100 ${236-show*bh-12}l8 10h-16z" fill="var(--gold)" stroke="var(--fg)" stroke-width="1"/>`;
+  return `<svg viewBox="0 0 200 250" height="${h||160}" role="img" aria-label="Tower with ${total} pieces"><line x1="20" x2="180" y1="238" y2="238" stroke="var(--line)" stroke-width="3" stroke-linecap="round"/>${out}</svg>`;
+}
+
+/* ---------- simulated rivals ---------- */
+/* Everyone except you on the leaderboard is made up by the app. Scores change each week, and are the same for everyone viewing that week. */
+const RIVAL_NAMES=['Ade','Tola','Kemi','Dapo','Funmi','Seyi','Bola','Yemisi','Taiwo','Kehinde','Shola','Lere','Ayo','Dami','Olamide','Temi','Bisi','Wale','Niyi','Sade','Femi','Tunde','Lola','Gbenga'];
+const RIVAL_TAGS=['Runs','Fox','Zoom','Flash','Wave','Spark','99','Boss','Star','Ace','07','Tiger','Pro','Moon','Drum','Jolly'];
+const LB_RANGE={runner:[300,4200],tone:[300,1150],match:[250,880],scramble:[250,1200],speed:[80,520],say:[200,1000],echo:[150,650],recall:[200,1000],tower:[3,110]};
+function mulberry(a){return()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const weekNo=()=>Math.floor((Date.now()-new Date(2024,0,1))/(7*864e5));
+function rivals(lb){
+  const rnd=mulberry(weekNo()*977+[...lb].reduce((a,c)=>a+c.charCodeAt(0),0)*131),[lo,hi]=LB_RANGE[lb],used=new Set(),out=[];
+  while(out.length<24){const nm=RIVAL_NAMES[Math.floor(rnd()*RIVAL_NAMES.length)]+(rnd()<.5?'_':'')+RIVAL_TAGS[Math.floor(rnd()*RIVAL_TAGS.length)];
+    if(used.has(nm))continue;used.add(nm);
+    out.push({name:nm,score:Math.round(lo+(hi-lo)*Math.pow(rnd(),1.7)),bot:true})}
+  return out;
+}
+const myScore=lb=>lb==='tower'?P.tower:P.best[lb]||0;
+const myName=()=>(P.name||'').trim()||'You';
+function board(lb){
+  const me={name:myName(),score:myScore(lb),me:true};
+  const all=[...rivals(lb),...(me.score>0?[me]:[])].sort((a,b)=>b.score-a.score);
+  return{all,rank:me.score>0?all.indexOf(all.find(x=>x.me))+1:0};
+}
+function boardRows(lb,limit){
+  const {all,rank}=board(lb),top=all.slice(0,limit||10);
+  let rows=top.map((r,i)=>[i+1,r]);
+  if(rank>(limit||10))rows=rows.concat([[0,null],[rank,all[rank-1]]]);
+  return `<ol class="lb">${rows.map(([n,r])=>r?`<li class="${r.me?'me':''}"><span class="rk">${n}</span><span class="nm">${esc(r.name)}${r.bot?'<i class="sim">sim</i>':' <i class="you">you</i>'}</span><b>${r.score.toLocaleString()}</b></li>`:'<li class="gap" aria-hidden="true">…</li>').join('')}</ol>`;
+}
+
+/* ---------- hub ---------- */
+function games(){
+  const lvl=towerLevel(P.tower);
+  return `<div class="sec" style="padding-top:max(14px,env(safe-area-inset-top,0px))"><h2>Game Hub</h2><span class="meta">${P.coins} cowries · ${P.tower} tower pieces</span></div>
+  <div class="panel towerpanel"><div class="tw">${towerSvg(P.tower,0,150)}</div>
+    <div><div class="eyebrow muted">Your tower</div><h3 style="margin:6px 0">${esc(lvl)}</h3>
+    <p style="margin:0" class="muted">Right answers in Tone Tower and every 15 cowries in Cowrie Run add a piece. Pieces are yours to keep.</p>
+    <div class="row" style="justify-content:flex-start"><button class="btn alt" data-act="tab" data-v="leaders">${ic('trophy')}&nbsp;Leaderboards</button></div></div></div>
+  <div class="games">${GAMES.map(g=>{const b=P.best[g.lb];return `<button class="gcard" data-act="tab" data-v="${g.id}"><span class="gic">${gicon(g.id,56)}</span><span class="gtx"><b>${esc(g.t)}</b><span class="yoname">${esc(g.yo)}</span><span class="meta">${esc(g.d)}</span><span class="gbest">${b?'Best '+b.toLocaleString():'Not played yet'}</span></span></button>`}).join('')}</div>
+  <p class="fine">Game scores and your tower are saved in this browser only. The other players on the leaderboards are simulated by the app to keep things lively, and are marked “sim”.</p>`;
+}
+function leaders(){
+  const lb=S.lb||'runner',{rank,all}=board(lb);
+  return `<div class="sec"><h2>Leaderboards</h2><span class="meta">Resets weekly for the sim players</span></div>
+  <div class="chips tabs" role="tablist" aria-label="Leaderboard">${LB.map(x=>`<button class="chip${lb===x[0]?' on':''}" role="tab" aria-selected="${lb===x[0]}" data-act="lbtab" data-id="${x[0]}">${esc(x[1])}</button>`).join('')}</div>
+  <div class="panel" style="padding:8px 16px"><div class="meta" style="padding:8px 0">${rank?`You are #${rank} of ${all.length}.`:'Play to get on the board.'} Your name comes from your Profile.</div>${boardRows(lb,10)}</div>
+  <p class="fine">Everyone marked “sim” is made up by the app. Real shared leaderboards would need a server.</p>`;
+}
+
+/* ---------- shared results screen ----------
+   A game finishes by calling finishGame(). It saves the best score, hands out rewards and switches the view to its "over" phase. */
+function finishGame(g,o){
+  const lb=g.lb,prev=P.best[lb]||0,isBest=o.score>prev;
+  if(isBest)P.best[lb]=o.score;
+  P.plays[lb]=(P.plays[lb]||0)+1;
+  if(o.pieces)P.tower+=o.pieces;if(o.coins)P.coins+=o.coins;
+  addXP(o.xp||0);
+  S.g=Object.assign({phase:'over',game:g.id},o,{isBest,rank:board(lb).rank,total:board(lb).all.length});
+  sfx(isBest?'win':'ok');render();
+}
+function gameOver(){
+  const r=S.g,g=GAMES.find(x=>x.id===r.game);
+  return `<div class="panel cen"><div class="eyebrow muted">${esc(g.t)}</div>
+    <div class="big" style="font-family:var(--f-ui);font-weight:800;margin:8px 0">${r.score.toLocaleString()}</div>
+    ${r.isBest?'<div class="chip on" style="display:inline-block">New personal best</div>':`<div class="meta">Personal best ${(P.best[g.lb]||0).toLocaleString()}</div>`}
+    <p class="muted" style="margin:12px 0 0">${(r.lines||[]).map(esc).join('<br>')}</p>
+    <div class="stats" style="justify-content:center;margin-top:16px"><span><b>#${r.rank}</b>of ${r.total}</span><span><b>+${r.xp||0}</b>XP</span>${r.pieces?`<span><b>+${r.pieces}</b>tower</span>`:''}${r.coins?`<span><b>+${r.coins}</b>cowries</span>`:''}</div>
+    ${r.pieces?`<div style="margin-top:8px">${towerSvg(P.tower-r.pieces,r.pieces,130)}</div>`:''}
+    <div class="row"><button class="btn" data-act="gplay" data-id="${g.id}">Play again</button><button class="btn alt" data-act="lbgo" data-id="${g.lb}">Leaderboard</button><button class="btn alt" data-act="tab" data-v="games">Game Hub</button></div>
+    <p class="fine">Rank is against simulated players.</p></div>`;
+}
+const overPhase=id=>S.g&&S.g.game===id&&S.g.phase==='over';
+
+/* ---------- add a new game with ONE call ----------
+   registerGame({id,title,yo,desc,icon,range,view,start})
+     id     short lowercase letters, used as the page address (#id) and leaderboard key
+     icon   inner SVG markup for a 64x64 icon (optional)   range  [low,high] typical score, for the simulated rivals
+     view   function returning the game's HTML              start  function that begins a round (sets S.g, calls render())
+   See templates/game-template.js for a complete example. */
+function registerGame(g){
+  GAMES.push({id:g.id,t:g.title,yo:g.yo||'',d:g.desc,lb:g.id});
+  LB.splice(LB.length-1,0,[g.id,g.title]);          // before "Tower height"
+  LB_RANGE[g.id]=g.range||[100,1000];
+  GI[g.id]=g.icon||GI.match;
+  VIEWS[g.id]=g.view;ACT['start'+g.id]=g.start;REG.push(g.id);
+}
+ACT.lbtab=d=>{S.lb=d.id;render()};
+ACT.lbgo=d=>{S.lb=d.id;go('leaders')};
+ACT.gplay=d=>{S.g=null;(ACT['start'+d.id]||(()=>{}))();};
+VIEWS.games=games;VIEWS.leaders=leaders;
+
+/* ===== 10-game-match-tower.js  Game 1: Match Game.  Game 2: Tone Tower (the pronunciation-style game). ===== */
+
+/* ---------- shared intro card ---------- */
+const intro=(g,text,btn)=>`<div class="panel cen"><div class="gic" style="display:inline-block">${gicon(g.id,84)}</div><h2 style="margin-top:8px">${esc(g.t)}</h2><div class="yoname">${esc(g.yo)}</div>
+  <p style="margin:12px auto 0;max-width:46ch">${text}</p><div class="row"><button class="btn" data-act="start${g.id}">${btn||'Start'}</button></div>
+  ${P.best[g.lb]?`<p class="meta" style="margin:12px 0 0">Your best: ${P.best[g.lb].toLocaleString()}</p>`:''}</div>`;
+
+/* ================= MATCH GAME ================= */
+let matchTimer=0,matchLock=0;
+function matchStop(){clearInterval(matchTimer);clearTimeout(matchLock);matchTimer=0}
+STOPS.push(matchStop);
+ACT.startmatch=()=>{
+  matchStop();
+  const pool=uniqBy(poolFor(i=>!unit(i.unit).build&&i.yo.split(' ').length<=2&&i.yo.length<=16&&i.en.length<=26,6),i=>i.en);
+  const pick=uniqBy(shuf(pool),i=>i.yo).slice(0,6);
+  /* ids are assigned after shuffling so a card's id is its position */
+  const cards=shuf(pick.flatMap((it,k)=>[{k,t:it.yo,side:'yo'},{k,t:it.en,side:'en'}])).map((c,i)=>Object.assign(c,{id:i}));
+  S.g={phase:'play',game:'match',cards,open:[],done:new Set(),moves:0,t0:Date.now(),secs:0};
+  matchTimer=setInterval(()=>{if(S.g&&S.g.game==='match'&&S.g.phase==='play'){S.g.secs=Math.floor((Date.now()-S.g.t0)/1000);const e=$('#mtime');if(e)e.textContent=S.g.secs+'s'}},500);
+  render();
+};
+ACT.mflip=d=>{
+  const g=S.g;if(!g||g.phase!=='play'||g.open.length>=2)return;
+  const id=+d.id;if(g.open.includes(id)||g.done.has(id))return;
+  g.open.push(id);sfx('flip');
+  if(g.open.length===2){
+    g.moves++;const[a,b]=g.open.map(i=>g.cards[i]);
+    if(a.k===b.k&&a.side!==b.side){
+      g.done.add(a.id);g.done.add(b.id);g.open=[];sfx('ok');
+      if(g.done.size===g.cards.length){matchStop();matchFinish();return}
+    }else{sfx('bad');matchLock=setTimeout(()=>{if(S.g===g){g.open=[];render()}},750)}
+  }
+  render();
+};
+function matchFinish(){
+  const g=S.g,secs=Math.floor((Date.now()-g.t0)/1000),pairs=g.cards.length/2;
+  const score=Math.max(100,1000-(g.moves-pairs)*40-secs*5);
+  finishGame(GAMES[0],{score,xp:10+pairs,lines:[`${pairs} pairs in ${g.moves} moves, ${secs} seconds.`,`Fewer moves and less time score higher.`]});
+}
+function matchView(){
+  if(overPhase('match'))return gameOver();
+  const g=S.g;
+  if(!g||g.game!=='match')return intro(GAMES[0],'Flip two cards at a time. Match each Yorùbá word with its English meaning. Fewer moves and a faster time score more.','Deal the cards');
+  return `<div class="gbar"><span><b>${g.done.size/2}</b>/${g.cards.length/2} pairs</span><span><b>${g.moves}</b> moves</span><span><b id="mtime">${g.secs}s</b></span></div>
+  <div class="mgrid">${g.cards.map(c=>{const up=g.open.includes(c.id)||g.done.has(c.id);
+    return `<button class="mcard${up?' up':''}${g.done.has(c.id)?' ok':''}${c.side==='yo'?' yo':''}" data-act="mflip" data-id="${c.id}" ${up?'disabled':''} aria-label="${up?esc(c.t):'Hidden card'}">${up?esc(c.t):'<span class="mback" aria-hidden="true"></span>'}</button>`}).join('')}</div>`;
+}
+VIEWS.match=matchView;
+
+/* ================= TONE TOWER =================
+   Browsers cannot listen to Yorùbá speech, so instead of speaking, you train the same skill by ear:
+   hear the pitch pattern of a word, then pick the word whose tone marks match. */
+function towerPool(){
+  return poolFor(i=>{if(/[\s-]/.test(i.yo)||unit(i.unit).build)return false;const n=toneOf(i.yo).length;return n>=2&&n<=4},12);
+}
+function towerQ(it,pool){
+  const p=toneOf(it.yo);
+  let d=shuf(pool.filter(x=>x.yo!==it.yo&&toneOf(x.yo)!==p&&toneOf(x.yo).length===p.length));
+  if(d.length<3)d=d.concat(shuf(pool.filter(x=>x.yo!==it.yo&&toneOf(x.yo)!==p&&!d.includes(x))));
+  d=uniqBy(d,x=>toneOf(x.yo)).slice(0,3);
+  return{it,p,opts:shuf([it,...d])};
+}
+ACT.starttower=()=>{
+  const pool=towerPool();
+  if(pool.length<5){toast('Finish a lesson or two first so there are words to play with.');return}
+  const qs=shuf(pool).slice(0,10).map(it=>towerQ(it,pool));
+  S.g={phase:'play',game:'tower',qs,qi:0,score:0,combo:0,right:0,pick:null};
+  render();playSeq([...qs[0].p]);
+};
+ACT.tpick=d=>{
+  const g=S.g;if(!g||g.pick!==null)return;
+  const q=g.qs[g.qi];g.pick=d.v;const ok=d.v===q.it.yo;
+  if(ok){g.right++;g.combo++;g.score+=100+25*Math.min(g.combo-1,4)}else g.combo=0;
+  sfx(ok?'ok':'bad');render();
+};
+ACT.tplay=()=>{const g=S.g;if(g)playSeq([...g.qs[g.qi].p])};
+ACT.tnext=()=>{
+  const g=S.g;g.qi++;g.pick=null;
+  if(g.qi>=g.qs.length){
+    P.audioDone++;
+    finishGame(GAMES[1],{score:g.score,xp:6+g.right*3,pieces:g.right,lines:[`${g.right} of ${g.qs.length} right.`,g.right?`${g.right} piece${g.right===1?'':'s'} added to your tower.`:'No pieces this time. Listen for high, mid and low.']});
+  }else{render();playSeq([...g.qs[g.qi].p])}
+};
+function towerView(){
+  if(overPhase('tower'))return gameOver();
+  const g=S.g;
+  if(!g||g.game!=='tower')return intro(GAMES[1],'Press play and listen to the pitch pattern. Pick the word whose tone marks match what you heard: grave is low, no mark is mid, acute is high. Every right answer adds a piece to your tower. Voice input is not possible in this app, so this trains your ear instead.','Build my tower');
+  const q=g.qs[g.qi],ans=g.pick!==null;
+  return `<div class="gbar"><span>Word <b>${g.qi+1}</b>/${g.qs.length}</span><span>Combo <b>${g.combo}</b></span><span>Score <b>${g.score}</b></span></div>
+  <div class="panel towerplay"><div class="tw">${towerSvg(P.tower,g.right,150)}</div>
+  <div><div class="q-label" style="margin-top:0">Which word has this pitch?</div>
+    <div class="row" style="justify-content:flex-start;margin-top:8px"><button class="btn" data-act="tplay">▶ Play pitch</button></div>
+    <div class="meta" style="margin-top:8px">${q.p.length} syllables</div></div></div>
+  <div class="opts">${q.opts.map(o=>{let cl='opt yo';if(ans){if(o.yo===q.it.yo)cl+=' right';else if(o.yo===g.pick)cl+=' wrong'}
+    return `<button class="${cl}" data-act="tpick" data-v="${esc(o.yo)}" ${ans?'disabled':''}>${esc(o.yo)} <span class="meta" style="font-family:var(--f-body);font-weight:400">· ${esc(o.en)}</span></button>`}).join('')}</div>
+  ${ans?`<div class="fb ${g.pick===q.it.yo?'ok':'no'}"><b>${g.pick===q.it.yo?'Right. +1 tower piece':'Not quite'}</b><span><span class="yo">${esc(q.it.yo)}</span> (${esc(q.it.en)}) is <b style="display:inline">${toneNames(q.p)}</b>.</span><div style="max-width:150px;margin-top:6px">${contour(q.p)}</div></span></div>
+  <div class="row"><button class="btn" data-act="tnext">${g.qi+1>=g.qs.length?'Finish':'Next word'}</button></div>`:''}`;
+}
+VIEWS.tower=towerView;
+
+/* ===== 11-game-runner.js  Game 3: Cowrie Run, a three-lane endless runner on a canvas.
+   Controls: arrow keys or A/D (lanes), Up/W/Space (jump), Down/S (slide), swipe on touch, or the on-screen buttons.
+   The loop draws everything itself, so the page is not re-rendered while you play. ===== */
+
+const RUN={raf:0,last:0,st:null,cv:null,cx:null,col:{}};
+const RW=360,RH=540,HOR=130,PL_P=.88,COWRIES_PER_PIECE=15;
+const laneX=(lane,p)=>RW/2+(lane-1)*(26+104*p);
+const groundY=p=>HOR+(RH-30-HOR)*p;
+const scaleOf=p=>.12+.88*p;
+
+function runStop(){cancelAnimationFrame(RUN.raf);RUN.raf=0;RUN.st=null}
+STOPS.push(runStop);
+ACT.startrunner=()=>{
+  runStop();
+  S.g={phase:'play',game:'runner'};
+  RUN.st={lane:1,lx:1,h:0,vy:0,slide:0,spd:1,dist:0,coins:0,obs:[],spawn:.6,off:0,t:0,dead:false,hitT:0};
+  render();
+};
+function runnerStart(){ /* called after the canvas exists */
+  RUN.cv=$('#rcv');if(!RUN.cv||!RUN.st)return;
+  const dpr=Math.min(2,window.devicePixelRatio||1);RUN.cv.width=RW*dpr;RUN.cv.height=RH*dpr;RUN.cx=RUN.cv.getContext('2d');RUN.cx.setTransform(dpr,0,0,dpr,0,0);
+  const cs=getComputedStyle(document.documentElement),v=n=>cs.getPropertyValue(n).trim()||'#888';
+  RUN.col={hero:v('--hero'),bg:v('--bg'),gold:v('--gold'),indigo:v('--indigo'),fg:v('--fg'),surface:v('--surface'),tint:v('--tint'),bad:v('--bad'),line:v('--line')};
+  RUN.last=performance.now();cancelAnimationFrame(RUN.raf);RUN.raf=requestAnimationFrame(runFrame);
+}
+AFTER.runner=()=>{if(S.g&&S.g.phase==='play'&&S.g.game==='runner')runnerStart();else{const c=$('#rcv');if(c&&RUN.cv!==c){RUN.cv=c}}};
+
+/* --- input --- */
+function rLeft(){const s=RUN.st;if(s&&!s.dead&&s.lane>0){s.lane--;sfx('tick')}}
+function rRight(){const s=RUN.st;if(s&&!s.dead&&s.lane<2){s.lane++;sfx('tick')}}
+function rJump(){const s=RUN.st;if(s&&!s.dead&&s.h<=.02&&s.slide<=0){s.vy=3.3;sfx('jump')}}
+function rSlide(){const s=RUN.st;if(s&&!s.dead){s.slide=.6;if(s.h>0)s.vy=-4}}
+ACT.rleft=rLeft;ACT.rright=rRight;ACT.rjump=rJump;ACT.rslide=rSlide;
+document.addEventListener('keydown',e=>{
+  if(!RUN.st||S.view!=='runner'||(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)))return;
+  const k=e.key,m={ArrowLeft:rLeft,a:rLeft,A:rLeft,ArrowRight:rRight,d:rRight,D:rRight,ArrowUp:rJump,w:rJump,W:rJump,' ':rJump,ArrowDown:rSlide,s:rSlide,S:rSlide}[k];
+  if(m){e.preventDefault();m()}
+});
+let swipe=null;
+document.addEventListener('touchstart',e=>{if(e.target.id==='rcv'&&e.touches[0])swipe={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
+document.addEventListener('touchend',e=>{
+  if(!swipe||!e.changedTouches[0])return;const dx=e.changedTouches[0].clientX-swipe.x,dy=e.changedTouches[0].clientY-swipe.y;swipe=null;
+  if(Math.abs(dx)<24&&Math.abs(dy)<24)return;
+  if(Math.abs(dx)>Math.abs(dy))dx<0?rLeft():rRight();else dy<0?rJump():rSlide();
+},{passive:true});
+
+/* --- simulation --- */
+function runSpawn(s){
+  /* Each row has 1-2 obstacles; at least one lane is always free of full blocks. */
+  const lanes=shuf([0,1,2]),n=Math.random()<.35?2:1,types=['low','low','high','block'];
+  const safe=lanes[2];
+  for(let i=0;i<n;i++){
+    let t=types[Math.floor(Math.random()*types.length)];
+    if(n===2&&t!=='block')t=Math.random()<.5?'low':'high';
+    s.obs.push({lane:lanes[i],p:0,type:t,hit:false});
+  }
+  if(Math.random()<.8){const l=n===2?safe:lanes[Math.floor(Math.random()*3)];
+    for(let k=0;k<4;k++)s.obs.push({lane:l,p:-k*.07,type:'coin',got:false})}
+}
+function runUpdate(dt){
+  const s=RUN.st;s.t+=dt;
+  s.spd=Math.min(2,1+s.t*.025);
+  s.lx+=(s.lane-s.lx)*Math.min(1,dt*14);
+  if(s.h>0||s.vy>0){s.vy-=9*dt;s.h=Math.max(0,s.h+s.vy*dt);if(s.h===0&&s.vy<0)s.vy=0}
+  if(s.slide>0)s.slide-=dt;
+  s.dist+=dt*s.spd*14;s.off=(s.off+dt*s.spd*.9)%1;
+  s.spawn-=dt;if(s.spawn<=0){runSpawn(s);s.spawn=Math.max(.5,1.25-s.spd*.38)+Math.random()*.25}
+  for(const o of s.obs){
+    if(o.p<0){o.p+=dt*.3;continue}
+    o.p+=(.28+o.p*.9)*s.spd*dt;
+    if(o.type==='coin'){
+      if(!o.got&&o.p>.8&&o.p<1&&Math.abs(o.lane-s.lx)<.55&&(s.h<.9)){o.got=true;s.coins++;sfx('coin')}
+    }else if(!o.hit&&o.p>.76&&o.p<1&&Math.abs(o.lane-s.lx)<.5){
+      const clear=o.type==='low'?s.h>.22:o.type==='high'?s.slide>0:false;
+      if(!clear){o.hit=true;s.dead=true;s.hitT=0;sfx('hit')}
+    }
+  }
+  s.obs=s.obs.filter(o=>o.p<1.15&&!(o.type==='coin'&&o.got));
+}
+const rScore=s=>Math.floor(s.dist)+s.coins*10;
+
+/* --- drawing --- */
+function runDraw(){
+  const s=RUN.st,c=RUN.cx,k=RUN.col;
+  /* sky */
+  const gr=c.createLinearGradient(0,0,0,HOR);gr.addColorStop(0,k.hero);gr.addColorStop(1,k.indigo);c.fillStyle=gr;c.fillRect(0,0,RW,HOR+2);
+  c.fillStyle=k.gold;c.beginPath();c.arc(270,70,24,0,7);c.fill();
+  c.fillStyle='rgba(255,255,255,.18)';for(let i=0;i<6;i++){const bx=i*64-((s.dist*.3)%64),bh=26+((i*37)%30);c.fillRect(bx,HOR-bh,44,bh)}
+  /* ground and road */
+  c.fillStyle=k.bg;c.fillRect(0,HOR,RW,RH-HOR);
+  c.fillStyle=k.hero;c.beginPath();c.moveTo(laneX(0,0)-26,HOR);c.lineTo(laneX(2,0)+26,HOR);c.lineTo(laneX(2,1)+70,RH);c.lineTo(laneX(0,1)-70,RH);c.closePath();c.fill();
+  c.strokeStyle='rgba(255,255,255,.35)';c.lineWidth=2;
+  for(const e of[.5,1.5]){c.beginPath();c.moveTo(RW/2+(e-1)*26,HOR);c.lineTo(RW/2+(e-1)*130+0,RH);c.stroke()}
+  c.strokeStyle='rgba(255,255,255,.18)';
+  for(let i=0;i<10;i++){const p=((i/10+s.off/10*1)%1),y=groundY(p);c.lineWidth=1+p*2;c.beginPath();c.moveTo(laneX(0,p)-(26+104*p)/1.4,y);c.lineTo(laneX(2,p)+(26+104*p)/1.4,y);c.stroke()}
+  /* things, far to near */
+  const list=s.obs.filter(o=>o.p>=0).sort((a,b)=>a.p-b.p);
+  for(const o of list){
+    if(o.p>PL_P&&!s.drawnPlayer){drawPlayer(s,c,k);s.drawnPlayer=true}
+    drawThing(o,c,k)}
+  if(!s.drawnPlayer)drawPlayer(s,c,k);s.drawnPlayer=false;
+  /* hud */
+  c.fillStyle='rgba(0,0,0,.35)';c.fillRect(0,0,RW,34);
+  c.fillStyle='#fff';c.font='700 16px sans-serif';c.textBaseline='middle';c.textAlign='left';c.fillText('Score '+rScore(s),10,17);
+  c.textAlign='right';c.fillText('Cowries '+s.coins,RW-10,17);
+  c.fillStyle='rgba(255,255,255,.3)';c.fillRect(RW/2-40,26,80,4);c.fillStyle=k.gold;c.fillRect(RW/2-40,26,80*((s.coins%COWRIES_PER_PIECE)/COWRIES_PER_PIECE),4);
+}
+function drawThing(o,c,k){
+  const x=laneX(o.lane,o.p),y=groundY(o.p),sc=scaleOf(o.p);
+  if(o.type==='coin'){
+    c.fillStyle=k.gold;c.strokeStyle='#7a5a00';c.lineWidth=1.5;c.beginPath();c.ellipse(x,y-26*sc,10*sc,13*sc,0,0,7);c.fill();c.stroke();
+    c.beginPath();c.moveTo(x,y-36*sc);c.lineTo(x,y-16*sc);c.stroke();return}
+  const w=78*sc;
+  if(o.type==='low'){c.fillStyle='#8a5a2b';c.fillRect(x-w/2,y-26*sc,w,12*sc);c.fillStyle='#5b3a1a';c.fillRect(x-w/2,y-14*sc,6*sc,14*sc);c.fillRect(x+w/2-6*sc,y-14*sc,6*sc,14*sc)}
+  else if(o.type==='high'){c.fillStyle='#5b3a1a';c.fillRect(x-w/2,y-84*sc,6*sc,84*sc);c.fillRect(x+w/2-6*sc,y-84*sc,6*sc,84*sc);c.fillStyle=k.bad;c.fillRect(x-w/2,y-84*sc,w,20*sc);c.fillStyle='rgba(255,255,255,.5)';for(let i=0;i<4;i++)c.fillRect(x-w/2+(i*2+.5)*w/8,y-84*sc,w/8,20*sc)}
+  else{c.fillStyle=k.bad;c.fillRect(x-w/2,y-70*sc,w,70*sc);c.strokeStyle='rgba(255,255,255,.55)';c.lineWidth=2*sc+.5;c.strokeRect(x-w/2+5*sc,y-65*sc,w-10*sc,60*sc);c.beginPath();c.moveTo(x-w/2+5*sc,y-65*sc);c.lineTo(x+w/2-5*sc,y-5*sc);c.stroke()}
+}
+function drawPlayer(s,c,k){
+  const p=PL_P,x=laneX(s.lx,p),gy=groundY(p),sc=scaleOf(p),lift=s.h*80*sc,sl=s.slide>0;
+  c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(x,gy,22*sc*(1-s.h*.25),6*sc,0,0,7);c.fill();
+  const flash=s.dead&&Math.floor(s.hitT*12)%2===0;
+  const bodyH=(sl?24:46)*sc,top=gy-lift-bodyH-14*sc,run=Math.sin(s.t*16)*(s.h>0?0:1);
+  c.fillStyle=flash?'#fff':k.gold;c.beginPath();c.arc(x,top,10*sc,0,7);c.fill();
+  c.fillStyle=flash?'#fff':k.indigo;c.fillRect(x-11*sc,top+9*sc,22*sc,bodyH-14*sc);
+  c.fillStyle='rgba(255,255,255,.6)';for(let i=0;i<3;i++)c.fillRect(x-9*sc,top+13*sc+i*8*sc*(sl?.5:1),18*sc,2*sc);
+  c.strokeStyle=k.fg;c.lineWidth=5*sc;c.lineCap='round';
+  c.beginPath();c.moveTo(x-5*sc,gy-lift-14*sc);c.lineTo(x-5*sc-run*8*sc,gy-lift);c.moveTo(x+5*sc,gy-lift-14*sc);c.lineTo(x+5*sc+run*8*sc,gy-lift);c.stroke();
+}
+function runFrame(now){
+  const s=RUN.st;if(!s||S.view!=='runner'||!S.g||S.g.phase!=='play')return;
+  const dt=Math.min(.05,(now-RUN.last)/1000);RUN.last=now;
+  if(!s.dead)runUpdate(dt);else s.hitT+=dt;
+  runDraw();
+  if(s.dead&&s.hitT>.9){
+    const score=rScore(s),pieces=Math.floor(s.coins/COWRIES_PER_PIECE),coins=s.coins,dist=Math.floor(s.dist);
+    runStop();
+    finishGame(GAMES[2],{score,coins,pieces,xp:Math.min(40,5+Math.floor(score/120)),lines:[`You ran ${dist} m and collected ${coins} cowries.`,pieces?`${COWRIES_PER_PIECE} cowries = 1 tower piece. You earned ${pieces}.`:`Collect ${COWRIES_PER_PIECE} cowries in one run to earn a tower piece.`]});
+    return;
+  }
+  RUN.raf=requestAnimationFrame(runFrame);
+}
+
+function runnerView(){
+  if(overPhase('runner'))return gameOver();
+  const g=S.g;
+  if(!g||g.game!=='runner')return intro(GAMES[2],'Run down the market road. Switch lanes to dodge crates, jump over low hurdles and slide under high bars. Grab cowries: every 15 in one run adds a piece to your tower. The game speeds up the longer you last.<br><span class="meta">Keys: ← → switch lanes, ↑ or Space jump, ↓ slide. On a phone: swipe, or use the buttons.</span>','Start running');
+  return `<div class="runwrap"><canvas id="rcv" width="${RW}" height="${RH}" aria-label="Cowrie Run game. Use arrow keys or swipe."></canvas>
+    <div class="pad"><button data-act="rleft" aria-label="Move left">◀</button><button data-act="rjump" aria-label="Jump">▲ Jump</button><button data-act="rslide" aria-label="Slide">▼ Slide</button><button data-act="rright" aria-label="Move right">▶</button></div></div>`;
+}
+VIEWS.runner=runnerView;
+
+/* ===== 12-game-scramble-speed.js  Game 4: Word Scramble.  Game 5: Speed Quiz. ===== */
+
+/* ================= WORD SCRAMBLE ================= */
+/* Splits a word into letters, keeping tone marks and underdots attached to their letter (and "gb" together). */
+function letters(w){
+  const out=[];for(const ch of String(w).normalize('NFD')){
+    if(/[̀-ͯ]/.test(ch)&&out.length)out[out.length-1]+=ch;
+    else if(ch.toLowerCase()==='b'&&out.length&&out[out.length-1].toLowerCase()==='g')out[out.length-1]+=ch;
+    else out.push(ch)}
+  return out;
+}
+let scrTimer=0,scrNext=0;
+function scrStop(){clearInterval(scrTimer);clearTimeout(scrNext);scrTimer=0}
+STOPS.push(scrStop);
+const SCR_SECS=90,SCR_WORDS=7;
+function scrWord(it){
+  const L=letters(it.yo);let t;
+  for(let i=0;i<12;i++){t=shuf(L.map((s,k)=>({s,id:k})));if(t.map(x=>x.s).join('')!==L.join(''))break}
+  return{it,L,tiles:t,placed:[],hint:0,penalty:0,solved:false};
+}
+ACT.startscramble=()=>{
+  scrStop();
+  const pool=poolFor(i=>{if(/[\s-]/.test(i.yo)||unit(i.unit).build)return false;const n=letters(i.yo).length;return n>=3&&n<=8},SCR_WORDS+3);
+  if(pool.length<SCR_WORDS){toast('Finish a lesson or two first so there are words to unscramble.');return}
+  const words=shuf(pool).slice(0,SCR_WORDS).map(scrWord);
+  S.g={phase:'play',game:'scramble',words,wi:0,score:0,solved:0,left:SCR_SECS};
+  scrTimer=setInterval(()=>{const g=S.g;if(!g||g.game!=='scramble'||g.phase!=='play')return;g.left--;const e=$('#stime');if(e)e.textContent=g.left+'s';if(g.left<=0)scrEnd()},1000);
+  render();
+};
+function scrEnd(){
+  const g=S.g;scrStop();
+  const score=g.score+(g.solved===SCR_WORDS?g.left*5:0);
+  finishGame(GAMES[3],{score,xp:5+g.solved*4,lines:[`${g.solved} of ${SCR_WORDS} words${g.solved===SCR_WORDS?`, with ${g.left} seconds to spare`:''}.`]});
+}
+function scrAdvance(){
+  const g=S.g;if(!g||g.phase!=='play')return;
+  g.wi++;if(g.wi>=g.words.length)scrEnd();else render();
+}
+function scrCheck(){
+  const g=S.g,w=g.words[g.wi];
+  if(w.placed.length!==w.L.length)return;
+  const got=w.placed.map(id=>w.tiles.find(t=>t.id===id).s).join('').normalize('NFD');
+  if(got===w.L.join('').normalize('NFD')){
+    w.solved=true;g.solved++;g.score+=Math.max(20,100-w.penalty);sfx('ok');render();
+    clearTimeout(scrNext);scrNext=setTimeout(scrAdvance,1100);
+  }else{sfx('bad');w.shake=true;render();w.shake=false}
+}
+ACT.sput=d=>{const g=S.g,w=g&&g.words&&g.words[g.wi];if(!w||w.solved||w.placed.includes(+d.id))return;w.placed.push(+d.id);sfx('tick');render();scrCheck()};
+ACT.stake=d=>{const g=S.g,w=g&&g.words&&g.words[g.wi];if(!w||w.solved)return;w.placed.splice(+d.k,1);render()};
+ACT.sclear=()=>{const w=S.g.words[S.g.wi];if(!w.solved){w.placed=[];render()}};
+ACT.shint=()=>{
+  const g=S.g,w=g.words[g.wi];if(w.solved)return;
+  /* keep the correct letters already in place, then add the next right one */
+  let k=0;while(k<w.placed.length&&w.tiles.find(t=>t.id===w.placed[k]).s===w.L[k])k++;
+  w.placed=w.placed.slice(0,k);
+  const t=w.tiles.find(t=>t.s===w.L[k]&&!w.placed.includes(t.id));
+  if(t){w.placed.push(t.id);w.penalty+=40;sfx('tick');render();scrCheck()}
+};
+ACT.sskip=()=>{const g=S.g;if(g&&g.words[g.wi]&&!g.words[g.wi].solved)scrAdvance()};
+function scrambleView(){
+  if(overPhase('scramble'))return gameOver();
+  const g=S.g;
+  if(!g||g.game!=='scramble')return intro(GAMES[3],`Unscramble ${SCR_WORDS} words in ${SCR_SECS} seconds. Tap letters in order, tone marks included. Each word is worth up to 100 points; a hint costs 40.`,'Start the clock');
+  const w=g.words[g.wi];
+  return `<div class="gbar"><span>Word <b>${g.wi+1}</b>/${g.words.length}</span><span>Score <b>${g.score}</b></span><span><b id="stime">${g.left}s</b></span></div>
+  <div class="panel cen"><div class="q-label" style="margin-top:0">Meaning</div><div class="prompt" style="font-size:1.4rem">${esc(w.it.en)}</div>
+    <div class="slots sc" style="justify-content:center" aria-label="Your answer">${w.L.map((_,k)=>{const id=w.placed[k];return id===undefined?`<span class="tok blank" aria-hidden="true"></span>`
+      :`<button class="tok${w.solved?' okt':''}" data-act="stake" data-k="${k}" ${w.solved?'disabled':''}>${esc(w.tiles.find(t=>t.id===id).s.normalize('NFC'))}</button>`}).join('')}</div>
+    <div class="bank" style="justify-content:center">${w.tiles.map(t=>`<button class="tok${w.placed.includes(t.id)?' used':''}" data-act="sput" data-id="${t.id}" ${w.solved?'disabled':''}>${esc(t.s.normalize('NFC'))}</button>`).join('')}</div>
+    ${w.solved?`<div class="fb ok" style="text-align:left"><b>Correct</b><span class="yo">${esc(w.it.yo)}</span></div>`:`<div class="row"><button class="btn alt" data-act="sclear">Clear</button><button class="btn alt" data-act="shint">Hint (−40)</button><button class="btn alt" data-act="sskip">Skip</button></div>`}</div>`;
+}
+VIEWS.scramble=scrambleView;
+
+/* ================= SPEED QUIZ ================= */
+let spdTimer=0,spdNext=0;
+function spdStop(){clearInterval(spdTimer);clearTimeout(spdNext);spdTimer=0}
+STOPS.push(spdStop);
+const SPD_SECS=60;
+function spdQ(){
+  const pool=poolFor(i=>!unit(i.unit).build&&i.yo.length<=26&&i.en.length<=36,12);
+  const it=pool[Math.floor(Math.random()*pool.length)];
+  return mcQ(it,Math.random()<.5?'yo2en':'en2yo',pool);
+}
+ACT.startspeed=()=>{
+  spdStop();
+  S.g={phase:'play',game:'speed',score:0,lives:3,combo:0,best:0,right:0,total:0,left:SPD_SECS,q:spdQ(),pick:null};
+  spdTimer=setInterval(()=>{const g=S.g;if(!g||g.game!=='speed'||g.phase!=='play')return;g.left--;
+    const e=$('#qtime'),b=$('#qbar');if(e)e.textContent=g.left+'s';if(b)b.style.width=(g.left/SPD_SECS*100)+'%';
+    if(g.left<=0)spdEnd()},1000);
+  render();
+};
+function spdEnd(){
+  const g=S.g;spdStop();
+  finishGame(GAMES[4],{score:g.score,xp:5+Math.floor(g.score/25),lines:[`${g.right} of ${g.total} right. Best combo ${g.best}.`]});
+}
+ACT.sans=d=>{
+  const g=S.g;if(!g||g.phase!=='play'||g.pick!==null)return;
+  const ok=d.v===g.q.answer;g.pick=d.v;g.total++;
+  if(ok){g.right++;g.combo++;g.best=Math.max(g.best,g.combo);g.score+=10*Math.min(4,1+Math.floor(g.combo/3))}
+  else{g.combo=0;g.lives--}
+  sfx(ok?'ok':'bad');render();
+  clearTimeout(spdNext);spdNext=setTimeout(()=>{if(S.g!==g||g.phase!=='play')return;if(g.lives<=0){spdEnd();return}g.q=spdQ();g.pick=null;render()},ok?350:900);
+};
+function speedView(){
+  if(overPhase('speed'))return gameOver();
+  const g=S.g;
+  if(!g||g.game!=='speed')return intro(GAMES[4],`${SPD_SECS} seconds, three lives. Answer as fast as you can. Three right in a row raises your multiplier, up to 4×. A wrong answer costs a life and resets the combo.`,'Start the clock');
+  const q=g.q,mult=Math.min(4,1+Math.floor(g.combo/3));
+  return `<div class="gbar"><span>Score <b>${g.score}</b></span><span>${'♥'.repeat(Math.max(0,g.lives))}${'♡'.repeat(3-Math.max(0,g.lives))}</span><span>×<b>${mult}</b></span><span><b id="qtime">${g.left}s</b></span></div>
+  <div class="bar" style="height:8px;margin:2px 0 4px" aria-hidden="true"><i id="qbar" style="width:${g.left/SPD_SECS*100}%"></i></div>
+  <div class="panel"><div class="q-label" style="margin-top:0">${q.dir==='yo2en'?'What does this mean?':'How do you say this in Yorùbá?'}</div>
+    <div class="prompt${q.dir==='yo2en'?' yo':''}">${esc(q.prompt)}</div>
+    <div class="opts">${q.options.map(o=>{let cl='opt'+(q.dir==='en2yo'?' yo':'');if(g.pick!==null){if(o===q.answer)cl+=' right';else if(o===g.pick)cl+=' wrong'}
+      return `<button class="${cl}" data-act="sans" data-v="${esc(o)}" ${g.pick!==null?'disabled':''}>${esc(o)}</button>`}).join('')}</div></div>`;
+}
+VIEWS.speed=speedView;
+
+/* ===== 13-home-profile-write.js  Home page, Profile (stats, daily goal, sound, badges, reset), Writing Lab (Courses 16 and 21) ===== */
+
+/* ---------- home ---------- */
+const FEATS=[
+ {v:'courses',i:'courses',t:'Courses',d:'21 courses in four tiers, from first greetings to proverbs.'},
+ {v:'games',i:'games',t:'Game Hub',d:'Eight games (three you play out loud), a tower to build and leaderboards.'},
+ {v:'chat',i:'chat',t:'Chat',d:'Text with a Yorùbá speaker. Get fixes as you type and a rating at the end.'},
+ {v:'call',i:'call',t:'Phone call',d:'Talk out loud on a call. Needs a microphone; if the device cannot, you are sent Home.'},
+ {v:'audio',i:'audio',t:'Audio Lab',d:'Listening drills, and your own OpenSLR recordings.'},
+ {v:'write',i:'write',t:'Writing Lab',d:'Write in Yorùbá and get your spelling and tone marks checked.'},
+ {v:'words',i:'words',t:'Phrasebook',d:'Search every word and phrase, and tap to listen.'},
+ {v:'review',i:'review',t:'Flashcards',d:'Flip through the words you have learned.'},
+ {v:'tones',i:'tones',t:'Tone Lab',d:'Hear low, mid and high pitch, then test your ear.'},
+ {v:'alpha',i:'alpha',t:'Alphabet',d:'All 25 letters with sound hints.'},
+ {v:'culture',i:'culture',t:'Culture',d:'Greetings, proverbs, names and where Yorùbá is spoken.'},
+ {v:'profile',i:'profile',t:'Profile',d:'Your stats, daily goal, badges and settings.'}];
+
+/* A new word each day, the same for the whole day. */
+function wordOfDay(){
+  const pool=uniqBy(ALL.filter(i=>!unit(i.unit).build&&i.yo.length<=20&&i.en.length<=40),i=>i.yo);
+  const d=new Date(),n=d.getFullYear()*372+d.getMonth()*31+d.getDate();return pool[n%pool.length];
+}
+const goalBar=()=>{const g=P.goal||30,x=Math.min(todayXP(),g);return `<div class="goal"><div class="bar" aria-hidden="true"><i style="width:${x/g*100}%"></i></div><span class="meta">${todayXP()>=g?'Daily goal reached':`${todayXP()} / ${g} XP today`}</span></div>`};
+
+function home(){
+  const nx=nextUnit(),w=wordOfDay();
+  return `<header class="hero"><div class="wrap">
+    <div class="eyebrow">Èdè Mi · Learn Yorùbá</div>
+    <h1><span>Ẹ káàbọ̀${P.name?', '+esc(P.name):''}</span></h1>
+    <p>Yorùbá is spoken by over 40 million people, mostly in Nigeria, Benin and Togo. Pick a feature below, or carry on with your next lesson.</p>
+    <div class="stats"><span><b>${liveStreak()}</b>day streak</span><span><b>${P.xp}</b>XP</span><span><b>Lv ${level()}</b></span><span><b>${coursesDone()}/${COURSES.length}</b>courses</span></div>
+    <div class="herogoal">${goalBar()}</div>
+  </div></header>
+  ${nx?`<button class="unit" style="margin-top:18px;width:100%" data-act="open" data-id="${nx.id}"><span class="n">${nx.n||'•'}</span><h3>Continue: ${esc(nx.title)}</h3><span class="yoname">${esc(nx.yo)}</span><span class="meta">Course ${nx.course}</span></button>`:''}
+  <div class="panel wotd"><div><div class="eyebrow muted">Word of the day</div><div class="yo" style="font-size:1.8rem;margin-top:6px">${esc(w.yo)}</div><div class="muted">${esc(w.en)}</div></div>${spkBtn(w.yo)}</div>
+  <div class="sec"><h2>Everything in Èdè Mi</h2></div>
+  <div class="units">${FEATS.map(f=>`<button class="unit" data-act="tab" data-v="${f.v}"><span class="n">${ic(f.i)}</span><h3>${esc(f.t)}</h3><span class="meta">${esc(f.d)}</span></button>`).join('')}</div>`;
+}
+VIEWS.home=home;
+
+/* ---------- profile ---------- */
+function profile(){
+  const stats=[[P.xp,'XP'],[level(),'Level'],[liveStreak(),'Day streak'],[P.maxStreak||0,'Best streak'],[unitsDone(),'Lessons done'],[coursesDone(),'Courses done'],[P.calls,'Calls'],[P.chats||0,'Chats'],[P.tower,'Tower pieces'],[P.coins,'Cowries'],[Object.values(P.plays).reduce((a,b)=>a+b,0),'Games played']];
+  return `<div class="sec"><h2>Profile</h2><span class="meta">Saved in this browser</span></div>
+  <div class="panel" style="margin-top:0"><label class="meta" for="pname">Your leaderboard name</label>
+    <input id="pname" class="search" type="text" maxlength="16" autocomplete="off" value="${esc(P.name||'')}" placeholder="Choose a name (no real name needed)" style="margin-top:6px">
+    <div class="eyebrow muted" style="margin-top:18px">Level ${level()}</div><div class="bar" style="margin-top:8px" aria-hidden="true"><i style="width:${Math.round(levelFrac()*100)}%"></i></div></div>
+  <div class="statgrid">${stats.map(s=>`<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join('')}</div>
+  <div class="panel"><h3>Daily goal</h3><p class="muted" style="margin:6px 0 10px">${goalBar().replace('<div class="goal">','<div class="goal" style="margin:0">')}</p>
+    <div class="chips" role="group" aria-label="Daily XP goal">${[20,30,50,100].map(g=>`<button class="chip${P.goal===g?' on':''}" data-act="setgoal" data-g="${g}" aria-pressed="${P.goal===g}">${g} XP</button>`).join('')}</div></div>
+  <div class="panel"><h3>Sound</h3><p class="muted" style="margin:6px 0 10px">Game and quiz sound effects. Pitch practice in the Tone Lab always plays.</p>
+    <button class="chip${P.sound?' on':''}" data-act="togglesound" aria-pressed="${P.sound}">Sound effects: ${P.sound?'on':'off'}</button></div>
+  <div class="sec"><h2>Badges</h2><span class="meta">${P.badges.length} of ${BADGES.length}</span></div>
+  <div class="badges">${BADGES.map(b=>{const on=P.badges.includes(b.id);return `<div class="badge${on?' on':''}"><span class="bi" aria-hidden="true">${on?'★':'☆'}</span><b>${esc(b.t)}</b><span class="meta">${esc(b.d)}</span></div>`}).join('')}</div>
+  <div class="panel"><h3>Reset</h3><p class="muted" style="margin:6px 0 10px">Erase XP, streaks, lesson progress, games and badges from this browser. Imported audio clips are removed separately in the Audio Lab.</p>
+    ${S.confirmReset?`<div class="row" style="justify-content:flex-start"><span class="meta">This cannot be undone.</span><button class="btn" style="background:var(--end);color:#fff" data-act="resetyes">Yes, erase it</button><button class="btn alt" data-act="resetno">Keep my progress</button></div>`:`<button class="chip" data-act="resetask">Reset my progress</button>`}</div>`;
+}
+ACT.setgoal=d=>{P.goal=+d.g;save();render()};
+ACT.togglesound=()=>{P.sound=!P.sound;save();render();sfx('ok')};
+ACT.resetask=()=>{S.confirmReset=true;render()};
+ACT.resetno=()=>{S.confirmReset=false;render()};
+ACT.resetyes=()=>{P=DEF();save();S.confirmReset=false;S.rv=null;toast('Progress reset.');render()};
+document.addEventListener('input',e=>{if(e.target.id==='pname'){P.name=e.target.value.replace(/[<>]/g,'').slice(0,16);save()}});
+VIEWS.profile=profile;
+
+/* ---------- writing lab ---------- */
+const WPROMPTS=[
+ ['Introduce yourself','Write 2 to 4 short sentences: your name, where you live, and one thing you like.','b'],
+ ['My family','Describe the people in your family with a few simple sentences.','b'],
+ ['My day','Say what you do in the morning and at night. Use ń, ti or máa if you can.','i'],
+ ['At the market','Write a short conversation or story about buying food.','i'],
+ ['Explain your opinion','Tell us what you think about school or phones, and give one reason with nítorí pé.','a'],
+ ['A letter to an elder','Write a short, respectful greeting and say what you are learning.','a'],
+ ['A tiny story','Write 4 to 6 sentences of any story you like.','a']];
+let SAMPLE_W=null;
+const wrk=()=>S.wr||(S.wr={p:0,text:'',res:null,busy:false,err:'',paid:{}});
+function knownShare(text){
+  const known=new Set(ALL.flatMap(i=>i.yo.split(/\s+/)).map(w=>wnorm(w.replace(/[.,!?;:“”"()]/g,''))).filter(Boolean));
+  const toks=text.split(/\s+/).map(w=>wnorm(w.replace(/[.,!?;:“”"()]/g,''))).filter(Boolean);
+  return{n:toks.length,k:toks.filter(t=>known.has(t)).length};
+}
+function writeView(){
+  const W=wrk(),pr=WPROMPTS[W.p],r=W.res,ks=knownShare(W.text||'');
+  return `<div class="sec"><h2>Writing Lab</h2><span class="meta">Courses 16 and 21 · ${P.writes} checked</span></div>
+  <div class="chips tabs" role="tablist" aria-label="Prompts">${WPROMPTS.map((x,i)=>`<button class="chip${W.p===i?' on':''}" role="tab" aria-selected="${W.p===i}" data-act="wprompt" data-i="${i}">${esc(x[0])}</button>`).join('')}</div>
+  <div class="panel"><div class="eyebrow muted">${{b:'Beginner',i:'Intermediate',a:'Advanced'}[pr[2]]} prompt</div><p style="margin:8px 0 12px">${esc(pr[1])}</p>
+    <textarea id="wtext" class="search" rows="6" placeholder="Write in Yorùbá here. Tone marks and underdots help, but you can add them later." aria-label="Your writing" ${W.busy?'disabled':''}></textarea>
+    <div class="keys" style="margin-top:8px" aria-label="Special letters">${['ẹ','ọ','ṣ','à','á','è','é','ì','í','ò','ó','ù','ú'].map(k=>`<button class="key" data-act="wins" data-c="${k}">${k}</button>`).join('')}</div>
+    <div class="row" style="justify-content:space-between;align-items:center"><span class="meta" id="wstat">${ks.n} words · ${ks.k} from your lessons</span>
+      <button class="btn" data-act="wcheck" ${W.busy||!SAMPLE?'disabled':''}>${W.busy?'Checking…':'Check my writing'}</button></div>
+    ${SAMPLE===null?'<div class="fb no">Checking needs Claude, which is not available where you opened this page. You can still write and count words.</div>':''}
+    ${W.err?`<div class="fb no">${esc(W.err)}</div>`:''}</div>
+  ${r?`<div class="panel"><div class="eyebrow muted">Feedback</div>${stars(r.stars)}<p style="margin:6px 0 0;text-align:center">${esc(r.summary)}</p>
+    ${r.corrected?`<div class="rsec"><div class="q-label">Polished version</div><div class="prov">${esc(r.corrected)}</div>${spkBtn(r.corrected)}</div>`:''}
+    ${r.issues.length?`<div class="rsec"><div class="q-label">Fixes</div><ul class="l">${r.issues.map(x=>`<li><span class="said">${esc(x.said)}</span> → <span class="yo">${esc(x.better)}</span><br><span class="meta">${esc(x.why)}</span></li>`).join('')}</ul></div>`:''}
+    ${r.next?`<div class="note" style="margin-top:14px"><b>Next:</b> ${esc(r.next)}</div>`:''}
+    <p class="fine">Feedback comes from Claude and can make mistakes, especially with tone marks. Check anything important with a Yorùbá speaker.</p></div>`:''}`;
+}
+function cleanWrite(r){r=r||{};const n=Math.max(1,Math.min(5,Math.round(Number(r.stars))||3));
+  return{stars:n,summary:String(r.summary||''),corrected:String(r.corrected||''),next:String(r.next||''),
+    issues:(Array.isArray(r.issues)?r.issues:[]).slice(0,6).map(x=>({said:String(x&&x.said||''),better:String(x&&x.better||''),why:String(x&&x.why||'')}))}}
+ACT.wprompt=d=>{const W=wrk();W.text=($('#wtext')||{}).value||W.text;W.p=+d.i;W.res=null;W.err='';W.text='';render()};
+ACT.wins=d=>{const el=$('#wtext');if(!el)return;const s=el.selectionStart==null?el.value.length:el.selectionStart,e2=el.selectionEnd==null?s:el.selectionEnd;el.setRangeText(d.c,s,e2,'end');wrk().text=el.value;el.focus();updWStat()};
+function updWStat(){const e=$('#wstat');if(e){const k=knownShare(wrk().text||'');e.textContent=`${k.n} words · ${k.k} from your lessons`}}
+document.addEventListener('input',e=>{if(e.target.id==='wtext'){wrk().text=e.target.value;updWStat()}});
+ACT.wcheck=async()=>{
+  const W=wrk(),el=$('#wtext');if(el)W.text=el.value;
+  const text=(W.text||'').trim();
+  if(!SAMPLE){return}
+  if(text.split(/\s+/).length<3){W.err='Write at least a few words first.';render();return}
+  W.busy=true;W.err='';render();
+  const pr=WPROMPTS[W.p],lvl={b:'beginner',i:'intermediate',a:'advanced'}[pr[2]];
+  const prompt=`You are a kind Yorùbá teacher checking writing from a teenage ${lvl} learner. Prompt they were given: "${pr[1]}"\nTheir text:\n"""${text}"""\n\nCheck spelling, word choice, word order, grammar and tone marks or underdots that change meaning. Do not penalise missing diacritics; mention them once as a tip. If you are not sure about a correction, say so in "why". Reply with ONLY one JSON object and no other text, in this shape:\n{"stars":4,"summary":"two short, encouraging sentences","corrected":"their text corrected, with tone marks and underdots","issues":[{"said":"the part they wrote","better":"the better Yorùbá","why":"one short teen-friendly sentence"}],"next":"one short suggestion for what to try next"}\nstars is a whole number 1 to 5. issues has up to 5 items.`;
+  try{
+    const r=await SAMPLE.json(prompt,{cache:false});
+    W.res=cleanWrite(r);W.busy=false;
+    if(!W.paid[W.p]){W.paid[W.p]=true;P.writes++;addXP(15)}
+  }catch(e){W.busy=false;W.err=sampleErr(e)}
+  render();
+};
+AFTER.write=()=>{const el=$('#wtext');if(el)el.value=wrk().text||''};
+VIEWS.write=writeView;
+
+/* ===== 14-games-voice.js  Games 6-8: the "say it out loud" games.
+     Say It   - see a word, say it.
+     Echo     - see a phrase for 3 seconds, then say it from memory.
+     Recall   - see only the English, say the Yorùbá.
+   HOW THE CHECK WORKS (honest version):
+   1. Auto-check: if the browser has speech recognition (SpeechRecognition), the game listens and compares what it heard
+      with the target, ignoring tone marks. Yorùbá is poorly supported by browsers, so it can miss words that were said
+      correctly. A "Count it" button lets you overrule it.
+   2. Self-check: if the browser has no recognition, or the page may not use the microphone (as in a published Claude
+      artifact), you say it out loud and then rate yourself. Nothing is recorded or sent anywhere.
+   The game switches to self-check on its own if auto-check fails. ===== */
+
+const VSR=window.SpeechRecognition||window.webkitSpeechRecognition||null;
+const VLANGS=['yo-NG','yo'];
+let vRec=null,vTimer=0;
+function vStop(){clearInterval(vTimer);vTimer=0;try{if(vRec){vRec.onresult=vRec.onerror=vRec.onend=null;vRec.abort()}}catch(e){}vRec=null}
+STOPS.push(vStop);
+
+/* Similarity 0..1 between what was heard and the target, ignoring tone marks, case and punctuation. */
+function lev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=Array.from({length:n+1},(_,j)=>j);
+  for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+const vnorm=s=>wnorm(s).replace(/[^a-z0-9 ]/g,'').replace(/\s+/g,' ').trim();
+function similarity(heard,target){const a=vnorm(heard),b=vnorm(target);if(!a||!b)return 0;return 1-lev(a,b)/Math.max(a.length,b.length)}
+
+const VGAMES={
+ say:{n:8,pool:()=>poolFor(i=>!unit(i.unit).build&&i.yo.split(' ').length<=2&&i.yo.length<=16&&i.en.length<=36,12),
+  ask:'Say this word out loud'},
+ echo:{n:6,pool:()=>poolFor(i=>{const w=i.yo.split(' ').length;return w>=2&&w<=5&&i.yo.length<=34&&i.en.length<=60},8),
+  ask:'Remember it, then say it'},
+ recall:{n:8,pool:()=>poolFor(i=>!unit(i.unit).build&&i.yo.split(' ').length<=3&&i.yo.length<=22&&i.en.length<=34,12),
+  ask:'Say this in Yorùbá'}};
+
+/* current check mode: 'auto' when the browser can listen, 'self' otherwise */
+const vMode=()=>S.vmode||(S.vmode=VSR?'auto':'self');
+
+function startVoice(id){
+  vStop();
+  const cfg=VGAMES[id],items=shuf(cfg.pool()).slice(0,cfg.n);
+  if(items.length<4){toast('Finish a lesson or two first so there are words to play with.');return}
+  S.g={phase:'play',game:id,items,i:0,step:id==='echo'?'show':'prep',score:0,right:0,combo:0,tries:0,heard:'',ok:null,pts:0,note:'',count:3,lang:0};
+  render();vArm();
+}
+ACT.startsay=()=>startVoice('say');
+ACT.startecho=()=>startVoice('echo');
+ACT.startrecall=()=>startVoice('recall');
+ACT.vmode=()=>{S.vmode=vMode()==='auto'?'self':'auto';render()};
+
+/* Echo: the phrase is visible for 3 seconds, then it hides. */
+function vArm(){
+  const g=S.g;vStop();if(!g||g.game!=='echo'||g.step!=='show')return;
+  g.count=3;
+  vTimer=setInterval(()=>{if(S.g!==g)return vStop();g.count--;if(g.count<=0){vStop();g.step='prep';render()}else{const e=$('#vcount');if(e)e.textContent=g.count}},1000);
+}
+
+/* Start speaking */
+ACT.vsay=()=>{
+  const g=S.g;if(!g||g.step!=='prep')return;
+  const it=g.items[g.i];
+  if(vMode()==='auto'&&VSR){
+    g.step='listen';g.note='';render();
+    let done=false;const finish=r=>{if(done)return;done=true;vStop();vResult(r)};
+    try{
+      vRec=new VSR();vRec.lang=VLANGS[g.lang]||'yo-NG';vRec.interimResults=false;vRec.maxAlternatives=5;vRec.continuous=false;
+      vRec.onresult=e=>finish({alts:[...e.results[0]].map(x=>x.transcript)});
+      vRec.onerror=e=>finish({err:e.error});
+      vRec.onend=()=>finish({err:'no-speech'});
+      vRec.start();
+      setTimeout(()=>{if(!done)try{vRec&&vRec.stop()}catch(e){}},7000);
+    }catch(e){finish({err:'start-failed'})}
+  }else{
+    /* self-check: a 4-second window to say it, then rate yourself */
+    g.step='self';g.count=4;render();
+    vTimer=setInterval(()=>{if(S.g!==g)return vStop();g.count--;if(g.count<=0){vStop();g.step='rate';render()}else{const e=$('#vcount');if(e)e.textContent=g.count}},1000);
+  }
+};
+function vResult(r){
+  const g=S.g;if(!g||g.step!=='listen')return;
+  if(r.err){
+    if(r.err==='language-not-supported'&&g.lang<VLANGS.length-1){g.lang++;g.step='prep';render();return ACT.vsay()}
+    if(r.err==='no-speech'||r.err==='aborted'){g.step='prep';g.note='I did not hear anything. Tap the microphone and try again.';render();return}
+    /* blocked or unavailable: switch to self-check for the rest of the session */
+    S.vmode='self';g.step='prep';g.note=r.err==='not-allowed'||r.err==='service-not-allowed'
+      ?'This page cannot use your microphone here, so the game switched to self-check: say it out loud, then rate yourself.'
+      :'Speech recognition is not working in this browser, so the game switched to self-check.';
+    render();return;
+  }
+  const it=g.items[g.i],best=Math.max(...r.alts.map(a=>similarity(a,it.yo)));
+  g.heard=r.alts[0]||'';g.sim=best;g.ok=best>=.7;
+  vScore(g.ok?'full':'miss');
+}
+/* Self-rating: 'full' | 'half' | 'miss' */
+function vScore(kind){
+  const g=S.g;
+  if(kind==='full'){g.right++;g.combo++;g.pts=100+25*Math.min(g.combo-1,4)}
+  else if(kind==='half'){g.combo=0;g.pts=50}else{g.combo=0;g.pts=0}
+  g.score+=g.pts;g.kind=kind;g.step='res';sfx(kind==='miss'?'bad':'ok');render();
+}
+ACT.vrate=d=>{if(S.g&&S.g.step==='rate')vScore(d.k)};
+ACT.vcount=()=>{const g=S.g;if(g&&g.step==='res'&&g.kind==='miss'&&g.heard){g.score-=g.pts;g.right++;g.combo++;g.pts=100;g.score+=100;g.kind='full';g.ok=true;sfx('ok');render()}};
+ACT.vlisten=()=>{const g=S.g;if(g){const it=g.items[g.i];if(!speak(it.yo))playSeq([...toneOf(it.yo)])}};
+ACT.vnext=()=>{
+  const g=S.g;vStop();g.i++;
+  if(g.i>=g.items.length){
+    const gm=GAMES.find(x=>x.id===g.game);
+    finishGame(gm,{score:g.score,xp:6+g.right*3,pieces:g.right,lines:[`${g.right} of ${g.items.length} said well.`,vMode()==='auto'?'Checked by speech recognition, which can miss Yorùbá.':'Self-checked, so this score is on the honor system.']});
+    return;
+  }
+  g.step=g.game==='echo'?'show':'prep';g.count=3;g.heard='';g.ok=null;g.note='';g.kind=null;render();vArm();
+};
+
+function voiceView(id){
+  if(overPhase(id))return gameOver();
+  const gm=GAMES.find(x=>x.id===id),g=S.g;
+  const auto=vMode()==='auto'&&VSR;
+  if(!g||g.game!==id){
+    const text={say:'A word appears. Say it out loud. Then you get points and, if you nailed it, a tower piece.',
+      echo:'A phrase shows for 3 seconds. Memorize it, then say it out loud after it disappears.',
+      recall:'Only the English shows. Say the Yorùbá out loud from memory, then see how you did.'}[id];
+    return intro(gm,text+`<br><span class="meta">${auto?'Auto-check: your browser will listen and compare what it hears. Yorùbá recognition is shaky, so you can overrule it.':'Self-check: nothing is recorded. You say it out loud, then rate yourself.'}</span>`,'Start')+
+      (VSR?`<div class="row"><button class="chip${auto?' on':''}" data-act="vmode" aria-pressed="${auto}">Auto-check: ${auto?'on':'off'}</button></div>`:'<p class="fine" style="text-align:center">This browser has no speech recognition, so the game uses self-check.</p>');
+  }
+  const it=g.items[g.i],cfg=VGAMES[id];
+  const revealed=['res','rate'].includes(g.step);
+  const hidden=id==='echo'&&g.step!=='show'&&!revealed;
+  const showYo=!hidden&&!(id==='recall'&&!revealed);
+  let body='';
+  if(g.step==='show')body=`<div class="meta" style="margin-top:10px">Memorize it. Hiding in <b id="vcount">${g.count}</b>…</div><div class="row"><button class="btn alt" data-act="vlisten">▶ Hear it</button></div>`;
+  else if(g.step==='prep')body=`${g.note?`<div class="fb tip" style="margin:10px 0 0"><span>${esc(g.note)}</span></div>`:''}<div class="row"><button class="btn mic" data-act="vsay" aria-label="Start speaking">🎤 Say it</button>${id==='say'?'<button class="btn alt" data-act="vlisten">▶ Hear it</button>':''}</div>${id==='recall'?'':''}`;
+  else if(g.step==='listen')body=`<div class="listening" role="status"><span></span><span></span><span></span></div><p class="meta" style="text-align:center;margin:6px 0 0">Listening… say it now</p>`;
+  else if(g.step==='self')body=`<div class="listening" role="status"><span></span><span></span><span></span></div><p style="text-align:center;margin:6px 0 0">Say it out loud now <b id="vcount">${g.count}</b></p>`;
+  else if(g.step==='rate')body=`<p style="text-align:center;margin:10px 0 0">How did it go?</p><div class="row"><button class="btn" data-act="vrate" data-k="full">Nailed it</button><button class="btn alt" data-act="vrate" data-k="half">Close</button><button class="btn alt" data-act="vrate" data-k="miss">Missed it</button></div>`;
+  else body=`<div class="fb ${g.kind==='miss'?'no':'ok'}"><b>${g.kind==='full'?'Nice! +'+g.pts+(g.right?' · tower piece':''):g.kind==='half'?'Close. +50':'Not this time'}</b>
+      <span><span class="yo">${esc(it.yo)}</span> means “${esc(it.en)}”.${g.heard?`<br><span class="meta">Heard: “${esc(g.heard)}”</span>`:''}</span></div>
+      <div class="row">${g.kind==='miss'&&g.heard?'<button class="btn alt" data-act="vcount">Count it, I said it right</button>':''}<button class="btn alt" data-act="vlisten">▶ Hear it</button><button class="btn" data-act="vnext">${g.i+1>=g.items.length?'Finish':'Next'}</button></div>`;
+  return `<div class="gbar"><span>${g.i+1}<b>/${g.items.length}</b></span><span>Combo <b>${g.combo}</b></span><span>Score <b>${g.score}</b></span></div>
+  <div class="panel cen"><div class="q-label" style="margin-top:0">${esc(cfg.ask)}</div>
+    ${showYo?`<div class="big yo" style="margin:6px 0">${esc(it.yo)}</div>${id==='say'||revealed?contour(toneOf(it.yo)||'M').replace('<svg','<svg style="max-width:150px;margin:0 auto;display:block"'):''}`:`<div class="big yo" style="margin:6px 0;opacity:.35" aria-label="Hidden">· · ·</div>`}
+    <div class="en" style="margin-top:4px">${esc(it.en)}</div>${body}</div>
+  <p class="fine">${auto?'Auto-check listens through your microphone using your browser’s speech recognition. Audio is handled by your browser, not by this app.':'Self-check: nothing is recorded.'}</p>`;
+}
+VIEWS.say=()=>voiceView('say');VIEWS.echo=()=>voiceView('echo');VIEWS.recall=()=>voiceView('recall');
+
+/* ===== 99-main.js  Navigation, hash routing, render loop, event wiring. Loads last. ===== */
+
+const TABS=[['home','Home'],['courses','Courses'],['chat','Chat'],['call','Call'],['games','Games'],['audio','Audio']];
+/* Pages with their own address (#name). Lesson screens are not addressable and count as part of Courses. */
+const PAGES=['home','courses','chat','call','games','audio','write','words','review','tones','alpha','culture','profile','leaders','match','tower','runner','scramble','speed','say','echo','recall'];
+/* Which tab lights up for pages that are not tabs themselves */
+const PARENT={learn:'courses',quiz:'courses',results:'courses',course:'courses',leaders:'games',match:'games',tower:'games',runner:'games',scramble:'games',speed:'games',say:'games',echo:'games',recall:'games'};
+/* Pages that show a back link: view -> [where it goes, label] */
+const BACK={review:['home','All features'],tones:['home','All features'],alpha:['home','All features'],culture:['home','All features'],words:['home','All features'],write:['home','All features'],profile:['home','All features'],
+  course:['courses','All courses'],leaders:['games','Game hub'],match:['games','Game hub'],tower:['games','Game hub'],runner:['games','Game hub'],scramble:['games','Game hub'],speed:['games','Game hub'],say:['games','Game hub'],echo:['games','Game hub'],recall:['games','Game hub']};
+REG.forEach(id=>{PAGES.push(id);PARENT[id]='games';BACK[id]=['games','Game hub']});   // games added with registerGame()
+const ALIAS={alphabet:'alpha',lessons:'courses',listen:'audio'};
+const hashOf=v=>v==='alpha'?'alphabet':v;
+const fromHash=()=>{const h=(location.hash||'').replace('#','');const v=ALIAS[h]||h;return PAGES.includes(v)?v:'home'};
+const pageOf=v=>PAGES.includes(v)?v:(PARENT[v]||'home');
+const tabOf=v=>{let x=v;for(let i=0;i<4&&!TABS.some(t=>t[0]===x);i++)x=PARENT[x]||'home';return x};
+
+let curView=null;
+function render(){
+  const v=VIEWS[S.view]?S.view:'home';
+  if(curView!==v){STOPS.forEach(f=>{try{f()}catch(e){}});curView=v}
+  const b=BACK[v];
+  $('#main').innerHTML=(b?`<button class="back" data-act="tab" data-v="${b[0]}">← ${b[1]}</button>`:'')+VIEWS[v]();
+  if(AFTER[v])AFTER[v]();
+  const tab=tabOf(v);
+  $('#nav').innerHTML=TABS.map(t=>`<button data-act="tab" data-v="${t[0]}" ${t[0]===tab?'aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true">${ICON[t[0]]}</svg>${t[1]}</button>`).join('');
+}
+function go(v){
+  S.view=v;
+  if(PAGES.includes(v)){try{if(location.hash!=='#'+hashOf(v))location.hash=hashOf(v)}catch(e){}}
+  render();window.scrollTo(0,0);
+}
+window.addEventListener('hashchange',()=>{const v=fromHash();if(v!==pageOf(S.view)){S.view=v;if(GAMES.some(g=>g.id===v))S.g=null;render();window.scrollTo(0,0)}});
+
+/* Opening a page from a tab, card or back link */
+ACT.tab=d=>{
+  const v=d.v;
+  if(v==='review')S.rv=null;
+  if(GAMES.some(g=>g.id===v))S.g=null;
+  if(v==='courses')S.cid=null;
+  go(v);
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&!b.disabled){const h=ACT[b.dataset.act];if(h)h(b.dataset)}});
+
+/* Start */
+S.view=fromHash();
+render();
+loadClips();
+
+</script>
